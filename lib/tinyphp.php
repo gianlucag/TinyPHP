@@ -10,6 +10,7 @@ include_once("tinyphp/dbauth-1.0.0/dbauth.php");
 include_once("tinyphp/logger-2.1.0.php");
 include_once("tinyphp/crypt-1.1.0.php");
 include_once("tinyphp/dictionary-1.0.0.php");
+include_once("tinyphp/mail/mail.php");
 
 class TinyPHP
 {
