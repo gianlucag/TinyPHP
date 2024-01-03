@@ -2,18 +2,32 @@
 <svg
    data-v-0dd9719b=""
    version="1.0"
-   width="244.06999"
-   height="76.529999"
-   viewBox="0 0 244.06999 76.529999"
+   width="115600"
+   height="62500"
+   viewBox="0 0 115600 62500"
    preserveAspectRatio="xMidYMid"
    color-interpolation-filters="sRGB"
    id="svg43"
+   sodipodi:docname="logo.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns="http://www.w3.org/2000/svg"
    xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview45"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     showgrid="false" />
   <g
      data-v-0dd9719b=""
      fill="#1a48cf"
      class="pmspacesvg"
+     transform="translate(57.526007,25.885514)"
      id="g24">
     <!---->
     <polyline
