@@ -5,50 +5,58 @@ require 'PHPMailer-6.9.1/src/SMTP.php';
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
-function sendemail($from, $fromname, $to, $subject, $templateFilePath, $values, $attachments, $ccs = null)
+
+class Mail
 {
-	$body = file_get_contents($templateFilePath);
-	for($v = 0; $v < count($values); $v++)
-	{
-		$body = str_replace("%".$v."%", iconv('UTF-8', 'windows-1252', $values[$v]), $body);
-	}
-
-    $mail = new PHPMailer(true);
-    try
+    public static function Send($from, $fromname, $to, $subject, $templateFilePath, $values = null, $attachments = null, $ccs = null)
     {
-        $mail->setFrom($from, $fromname);
-        if($to != null) $mail->addAddress($to);
+        $body = file_get_contents($templateFilePath);
 
-        if($ccs)
+        if($values)
         {
-            for($c = 0; $c < count($ccs); $c++)
+            for($v = 0; $v < count($values); $v++)
             {
-                $mail->addCC($ccs[$c]);
+                $body = str_replace("%".$v."%", iconv('UTF-8', 'windows-1252', $values[$v]), $body);
             }
         }
 
-        //if($bccs != null) $mail->addBCC($bccs);
-
-        $mail->isHTML(true);
-        $mail->Subject = $subject;
-        $mail->Body = $body;
-
-        if($attachments)
+        $mail = new PHPMailer(true);
+        try
         {
-            for($a = 0; $a < count($attachments); $a++)
+            $mail->setFrom($from, $fromname);
+            if($to != null) $mail->addAddress($to);
+    
+            if($ccs)
             {
-                $attachment = $attachments[$a];
-                $filepath = $attachment[0];
-                $cid = $attachment[1];
-                $mail->AddAttachment($filepath, $cid); 
+                for($c = 0; $c < count($ccs); $c++)
+                {
+                    $mail->addCC($ccs[$c]);
+                }
             }
+    
+            //if($bccs != null) $mail->addBCC($bccs);
+    
+            $mail->isHTML(true);
+            $mail->Subject = $subject;
+            $mail->Body = $body;
+    
+            if($attachments)
+            {
+                for($a = 0; $a < count($attachments); $a++)
+                {
+                    $attachment = $attachments[$a];
+                    $filepath = $attachment[0];
+                    $cid = $attachment[1];
+                    $mail->AddAttachment($filepath, $cid); 
+                }
+            }
+            $res = $mail->send();
+            return $res;
         }
-        $res = $mail->send();
-        return $res;
-    }
-    catch(Exception $e)
-    {
-        return false;
+        catch(Exception $e)
+        {
+            return false;
+        }
     }
 }
 
