@@ -14,6 +14,10 @@ It provides the following functionalities:
 - L10n (Translations via json dictionaries)
 - Logging (.log files)
 - Authentication (Cookie and X-Auth-Token)
+- File download
+- Excel/CSV import and export
+- Configuration
+- File upload
 
 Basic example
 
