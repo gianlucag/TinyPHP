@@ -1,10 +1,9 @@
 <?php
-require 'PHPMailer-6.9.1/src/Exception.php';
-require 'PHPMailer-6.9.1/src/PHPMailer.php';
-require 'PHPMailer-6.9.1/src/SMTP.php';
+require 'libs/vendor/PHPMailer-6.9.1/src/Exception.php';
+require 'libs/vendor/PHPMailer-6.9.1/src/PHPMailer.php';
+require 'libs/vendor/PHPMailer-6.9.1/src/SMTP.php';
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
-
 
 class Mail
 {

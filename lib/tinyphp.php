@@ -11,6 +11,9 @@ include_once("tinyphp/logger-2.1.0.php");
 include_once("tinyphp/crypt-1.1.0.php");
 include_once("tinyphp/dictionary-1.0.0.php");
 include_once("tinyphp/mail/mail.php");
+include_once("tinyphp/spreadsheet/spreadsheet.php");
+include_once("tinyphp/download.php");
+include_once("tinyphp/upload.php");
 
 class TinyPHP
 {
@@ -26,7 +29,7 @@ class TinyPHP
 
     private static function Run404()
     {
-        if (file_exists(self::$page404))
+        if (self::$page404 && file_exists(self::$page404))
         {
             include_once(self::$page404);
         }
