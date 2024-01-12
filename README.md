@@ -28,6 +28,14 @@ TinyPHP::RegisterRoute("/login", "html/login.php");
 TinyPHP::Run();
 ```
 
+# Is TinyPHP a framework?
+
+Kind of. It provides built-in functions for common tasks, but it doesn't force any folder structure nor naming conventions for you project. In that sense, TinyPHP is not really a framework like CakePHP or Laravel.
+
+# So what is it?
+
+It's really just a set of libraries for commonly used functions, cutting down on the amount of code you have to write.
+
 # Requirements
 
 TinyPHP requires `PHP 7.4` or greater.
