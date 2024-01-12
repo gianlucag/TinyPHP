@@ -1,0 +1,18 @@
+{
+    "db": {
+        "host": "localhost",
+        "name": "dbname",
+        "user": "root",
+        "pass": ""
+    },
+    "dbauth": {
+        "userTableName": "demo_users",
+        "userIdFieldName": "id",
+        "userUsernameFieldName": "username",
+        "userPasswordFieldName": "password",
+        "sessionTableName": "demo_sessions",
+        "sessionUserIdFieldName": "userid",
+        "sessionTokenFieldName": "token"     
+    },
+    "logdir": "logs"
+}

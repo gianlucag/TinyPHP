@@ -1,6 +1,6 @@
 <?php
 
-require_once('libs/vendor/PhpSpreadsheet-1.29.0/autoload.php');
+require_once(TINYPHP_ROOT.'/vendor/PhpSpreadsheet-1.29.0/autoload.php');
 
 class SpreadSheet
 {

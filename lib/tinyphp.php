@@ -2,6 +2,8 @@
 session_start();
 error_reporting(E_ALL);
 
+define("TINYPHP_ROOT", __DIR__);
+
 include_once("tinyphp/config-1.0.0.php");
 include_once("tinyphp/api-2.0.0.php");
 include_once("tinyphp/db-2.2.0.php");
