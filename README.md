@@ -38,6 +38,10 @@ Kind of. It provides built-in functions for common tasks, but it doesn't force a
 
 It's really just a set of libraries for commonly used functions, cutting down on the amount of code you have to write.
 
+# Why another framewor...ehm... collection of libraries?
+
+I frequently find myself repeatedly writing certain functions or transferring them from one project to another. Over the years, I've accumulated a variety of functionalities that address a wide range of API and web use cases. Ultimately, I've made the decision to centralize them on GitHub, assigning them a uniform name, and adopting proper tagging and versioning practices, something I should have done right from the beginning :-)
+
 # Requirements
 
 TinyPHP requires `PHP 7.4` or greater.
