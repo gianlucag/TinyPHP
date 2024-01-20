@@ -18,6 +18,7 @@ include_once("tinyphp/download.php");
 include_once("tinyphp/upload.php");
 include_once("tinyphp/captcha.php");
 include_once("tinyphp/date.php");
+include_once("tinyphp/input.php");
 
 class TinyPHP
 {

@@ -20,6 +20,7 @@ It provides the following functionalities:
 - File upload
 - Basic datetime
 - Google Captcha v3
+- Input sanitization
 
 Basic example
 
