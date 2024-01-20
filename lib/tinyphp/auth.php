@@ -4,6 +4,8 @@ class Auth
 {
     public static $cookieName = null;
     public static $authMode = null;
+    public static $passwordCheckFunction = null;
+    public static $passwordHashFunction = null;
 
     private static function IsXAuthMode()
     {
@@ -29,10 +31,12 @@ class Auth
         return null;
     }
 
-    public static function Init($authMode, $cookieName = null)
+    public static function Init($authMode, $cookieName = null, $passwordCheckFunction = null, $passwordHashFunction = null)
     {
         self::$authMode = $authMode == "xauth" ? "xauth" : "cookie";
         self::$cookieName = $cookieName;
+        self::$passwordCheckFunction = $passwordCheckFunction;
+        self::$passwordHashFunction = $passwordHashFunction;
     }
     
     public static function GetCurrentToken()
@@ -49,9 +53,32 @@ class Auth
         return $token;
     }
 
+    public static function ComputeHashPassword($password)
+    {
+        if(self::$passwordHashFunction)
+        {
+            $res = call_user_func(self::$passwordHashFunction, $password);
+        }
+        else
+        {
+            $res = password_hash($password, PASSWORD_DEFAULT);
+        }
+
+        return $res;
+    }
+
     public static function Login($password, $storedPassword)
     {  
-        if(password_verify($password, $storedPassword))
+        if(self::$passwordCheckFunction)
+        {
+            $res = call_user_func(self::$passwordCheckFunction, $password, $storedPassword);
+        }
+        else
+        {
+            $res = password_verify($password, $storedPassword);
+        }
+
+        if($res)
         {
             $token = bin2hex(random_bytes(16));
 

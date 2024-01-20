@@ -1,3 +1,4 @@
 {
-    "TEST": "Prova"
+    "TEST": "Prova",
+    "TEST_DYNAMIC": "Operazione in corso, % di % file completati"
 }

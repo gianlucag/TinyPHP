@@ -4,18 +4,20 @@ error_reporting(E_ALL);
 
 define("TINYPHP_ROOT", __DIR__);
 
-include_once("tinyphp/config-1.0.0.php");
-include_once("tinyphp/api-2.0.0.php");
-include_once("tinyphp/db-2.2.0.php");
-include_once("tinyphp/auth-6.0.0.php");
-include_once("tinyphp/dbauth-1.0.0/dbauth.php");
-include_once("tinyphp/logger-2.1.0.php");
-include_once("tinyphp/crypt-1.1.0.php");
-include_once("tinyphp/dictionary-1.0.0.php");
+include_once("tinyphp/config.php");
+include_once("tinyphp/api.php");
+include_once("tinyphp/db.php");
+include_once("tinyphp/auth.php");
+include_once("tinyphp/dbauth/dbauth.php");
+include_once("tinyphp/logger.php");
+include_once("tinyphp/crypt.php");
+include_once("tinyphp/dictionary.php");
 include_once("tinyphp/mail/mail.php");
 include_once("tinyphp/spreadsheet/spreadsheet.php");
 include_once("tinyphp/download.php");
 include_once("tinyphp/upload.php");
+include_once("tinyphp/captcha.php");
+include_once("tinyphp/date.php");
 
 class TinyPHP
 {

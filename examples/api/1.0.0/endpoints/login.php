@@ -5,7 +5,6 @@ function Error($msg)
     Api::Error(500, $msg);
 }
 
-
 Config::Init("conf/config.json", "Error");
 Db::Init(Config::GetField("db"), "Error");
 Auth::Init("xauth", null);

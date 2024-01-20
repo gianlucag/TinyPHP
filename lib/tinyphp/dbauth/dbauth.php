@@ -31,7 +31,7 @@ class DbAuth
 
     public static function GetLoggedUser()
     {
-        return self::$loggedUser;
+        return (object)self::$loggedUser;
     }
 
     public static function Login($username, $password)

@@ -1,9 +1,9 @@
 {
     "db": {
         "host": "localhost",
-        "name": "my_ggtest",
-        "user": "root",
-        "pass": ""
+        "name": "myname",
+        "user": "myuser",
+        "pass": "mypass"
     },
     "dbauth": {
         "userTableName": "demo_users",
