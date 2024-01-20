@@ -8,9 +8,9 @@ quickly and easily build RESTful api and web applications.
 It provides the following functionalities:
 
 - Routing
-- REST API basic functions (Access GET and POST data)
+- REST API basic functions (Access GET and POST data, return payloads and http error codes)
 - Cryptographic functions (Generate random UUIDs, nonces etc..)
-- MySQL (Launch a query, get the results)
+- MySQL (Launch queries, get results)
 - L10n (Translations via json dictionaries)
 - Logging (.log files)
 - Authentication (Cookie and X-Auth-Token)
@@ -18,6 +18,8 @@ It provides the following functionalities:
 - Excel/CSV import and export
 - Configuration
 - File upload
+- Basic datetime
+- Google Captcha v3
 
 Basic example
 
