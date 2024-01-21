@@ -3,7 +3,7 @@
 # What is TinyPHP?
 
 TinyPHP is a fast, simple, extensible collection of PHP scripts to
-quickly and easily build RESTful api and web applications.
+quickly and easily build RESTful APIs and web applications.
 
 It provides the following functionalities:
 
