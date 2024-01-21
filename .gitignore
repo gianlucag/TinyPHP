@@ -1,2 +1,4 @@
 .DS_Store
 lib/vendor
+
+!lib/vendor/README.md
