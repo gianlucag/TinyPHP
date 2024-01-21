@@ -21,6 +21,7 @@ It provides the following functionalities:
 - Basic datetime
 - Google Captcha v3
 - Input sanitization
+- Email send (html templates, attachments, cc and bcc recipients)
 
 Basic example
 
@@ -46,6 +47,14 @@ I frequently find myself repeatedly writing certain functions or transferring th
 # Requirements
 
 TinyPHP requires `PHP 7.4` or greater.
+
+Also, some features require external, third-party libraries, here's the list:
+
+- PHPMailer 6.9.1 (used by `Mail`)
+- PhpSpreadsheet 1.29.0 (used by `SpreadSheet`)
+
+These libraries should be placed inside the `vendor` folder.
+If you don't plan to use these functionalities, simply comment out the appropriate include file in `tinyphp.php`
 
 # License
 
