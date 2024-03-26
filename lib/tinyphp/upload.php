@@ -18,7 +18,7 @@ class Upload
         return pathinfo($filename, PATHINFO_EXTENSION);
     }
 
-    public static function GetUploadedFile()
+    public static function GetUploadedFilePath()
     {
         return $_FILES['file']['tmp_name'];
     }

@@ -12,6 +12,7 @@ class API
 
 	public static function Error($statusCode = 500, $errorData = null)
 	{
+		ob_end_clean();
 		http_response_code($statusCode);
 		if ($errorData)
 			echo $errorData;
@@ -20,6 +21,7 @@ class API
 
 	public static function Ok($data = null)
 	{
+		ob_end_clean();
 		echo json_encode($data, JSON_BIGINT_AS_STRING);
 		die();
 	}

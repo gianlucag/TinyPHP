@@ -57,7 +57,7 @@ class SpreadSheet
         $writer->save($destFilePath);
     }
 
-    public static function Load($filePath)
+    public static function Load($filePath, $csvDelimiter = ";")
     {
         try
         {
@@ -68,12 +68,13 @@ class SpreadSheet
             {
                 $reader->setInputEncoding(\PhpOffice\PhpSpreadsheet\Reader\Csv::GUESS_ENCODING);
                 $reader->setFallbackEncoding('CP1252');
-                $reader->setDelimiter(';');
+                $reader->setDelimiter($csvDelimiter);
                 $reader->setEnclosure('');
             }
             self::$spreadsheet = $reader->load($filePath);
             self::$spreadsheet->setActiveSheetIndex(0);
-            self::$totCols = self::$spreadsheet->getActiveSheet()->getHighestColumn();
+            $totColsAsChars = self::$spreadsheet->getActiveSheet()->getHighestColumn();
+            self::$totCols = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::columnIndexFromString($totColsAsChars);
             self::$totRows = self::$spreadsheet->getActiveSheet()->getHighestDataRow();
         }
         catch(\PhpOffice\PhpSpreadsheet\Reader\Exception $e)
@@ -91,17 +92,16 @@ class SpreadSheet
 
     public static function GetTotCols()
     {
-        return \PhpOffice\PhpSpreadsheet\Cell\Coordinate::columnIndexFromString(self::$totCols);
+        return self::$totCols;
     }
 
-    public static function GetRow($index, $maxCellLength = null)
+    public static function GetRow($rowIndex, $maxCellLength = null)
     {
-        $i = $index + 1; // 0 based index
         $row = array();
-        for ($c = 'A'; $c <= self::$totCols; $c++)
+        for ($colIndex = 0; $colIndex < self::$totCols; $colIndex++)
         {
-            $value = self::$spreadsheet->setActiveSheetIndex(0)->getCell($c.$i)->getValue();
-            $value = trim($value);
+            $value = self::$spreadsheet->setActiveSheetIndex(0)->getCell([$colIndex + 1, $rowIndex + 1])->getValue();
+            $value = $value == null ? "" : trim($value);
             if($maxCellLength)
             {
                 $value = substr($value, 0, $maxCellLength);
@@ -126,7 +126,7 @@ class SpreadSheet
         }
         else
         {
-            return Sself::aveToOutput($writer);
+            return self::SaveToOutput($writer);
         }
     }
 

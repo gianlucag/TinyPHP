@@ -8,6 +8,7 @@ class Download
         header('Content-Type: '.$mimeType);
         header('Content-Disposition: attachment; filename="'. urlencode($filename).'"');
         echo $contentBinary;
+        die();
     }
 }
 
