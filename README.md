@@ -15,13 +15,16 @@ It provides the following functionalities:
 - Logging (.log files)
 - Authentication (Cookie and X-Auth-Token)
 - File download
+- File upload
 - Excel/CSV import and export
 - Configuration
-- File upload
-- Basic datetime
+- Datetime (parse, format, math on dates)
 - Google Captcha v3
 - Input sanitization
 - Email send (html templates, attachments, cc and bcc recipients)
+- Stripe (payments)
+- QRCodes
+- Currency (format currency amounts)
 
 Basic example
 
@@ -106,7 +109,7 @@ TinyPHP::Run();
 
 # Routing
 
-Routing in TinyPHP is done by matching a URL pattern with a php script.
+Routing in TinyPHP is done by matching a URL pattern with a php script (the controller).
 
 ```php
 TinyPHP::RegisterRoute("/login", "html/login.php");
@@ -137,7 +140,7 @@ TinyPHP::Register404("html/404.php");
 TinyPHP::Run();
 ```
 
-## REST API with one endopoint
+## REST API with one endpoint
 
 File `index.php`
 
