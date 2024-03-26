@@ -135,7 +135,7 @@ Here's the table
 | stripe          | stripe-php                | 13.11.0 |
 | qrcodegenerator | phpqrcode                 | N/A     |
 
-To enable a module, simply uncomment the corresponding include in `tinyphp.php`.
+To enable a module, simply uncomment the corresponding include in `tinyphp.php` and place the required library in the `vendor` folder.
 
 # Examples
 
