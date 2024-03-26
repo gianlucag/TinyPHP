@@ -5,6 +5,7 @@ header('Cache-Control: no cache');
 
 define("TINYPHP_ROOT", __DIR__);
 
+// enabled modules
 include_once("tinyphp/config.php");
 include_once("tinyphp/api.php");
 include_once("tinyphp/db.php");
@@ -13,16 +14,16 @@ include_once("tinyphp/dbauth/dbauth.php");
 include_once("tinyphp/logger.php");
 include_once("tinyphp/crypt.php");
 include_once("tinyphp/dictionary.php");
-include_once("tinyphp/mail/mail.php");
-include_once("tinyphp/spreadsheet/spreadsheet.php");
 include_once("tinyphp/download.php");
 include_once("tinyphp/upload.php");
-include_once("tinyphp/captcha.php");
 include_once("tinyphp/date.php");
 include_once("tinyphp/input.php");
 include_once("tinyphp/currency.php");
-include_once("tinyphp/stripe/stripe.php");
-include_once("tinyphp/qrcodegenerator.php");
+//include_once("tinyphp/mail/mail.php");
+//include_once("tinyphp/spreadsheet/spreadsheet.php");
+//include_once("tinyphp/captcha.php");
+//include_once("tinyphp/stripe/stripe.php");
+//include_once("tinyphp/qrcodegenerator.php");
 
 class TinyPHP
 {

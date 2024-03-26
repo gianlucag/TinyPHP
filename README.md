@@ -123,6 +123,20 @@ If you have a common root path for all your endpoint, you can use the `RegisterR
 TinyPHP::RegisterRoot("/my/common/path");
 ```
 
+# Requirements
+
+TinyPHP comes equipped with all necessary functionalities straight out of the box, eliminating the need for any external libraries. However, should you wish to utilize any of the additional modules such as `mail`, `spreadsheet`, `stripe`, or `qrcodegenerator`, external libraries will be required.
+Here's the table
+
+| Module Name     | External Library Required | Version |
+| --------------- | ------------------------- | ------- |
+| mail            | PHPMailer                 | 6.9.1   |
+| spreadsheet     | PhpSpreadsheet            | 1.29.0  |
+| stripe          | stripe-php                | 13.11.0 |
+| qrcodegenerator | phpqrcode                 | N/A     |
+
+To enable a module, simply uncomment the corresponding include in `tinyphp.php`.
+
 # Examples
 
 Some useful examples.
