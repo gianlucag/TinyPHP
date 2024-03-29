@@ -54,14 +54,17 @@ If you aim to swiftly create an API, a straightforward web application, or a web
 # Requirements
 
 TinyPHP requires `PHP 7.4` or greater.
+Also, TinyPHP comes equipped with all necessary functionalities straight out of the box, eliminating the need for any external libraries. However, should you wish to utilize any of the additional modules such as `mail`, `spreadsheet`, `stripe`, or `qrcodegenerator`, external libraries will be required.
+Here's the table
 
-Also, some features require external, third-party libraries, here's the list:
+| Module Name     | External Library Required | Version |
+| --------------- | ------------------------- | ------- |
+| mail            | PHPMailer                 | 6.9.1   |
+| spreadsheet     | PhpSpreadsheet            | 1.29.0  |
+| stripe          | stripe-php                | 13.11.0 |
+| qrcodegenerator | phpqrcode                 | N/A     |
 
-- PHPMailer 6.9.1 (used by `Mail`)
-- PhpSpreadsheet 1.29.0 (used by `SpreadSheet`)
-
-These libraries should be placed inside the `vendor` folder.
-If you don't plan to use these functionalities, simply comment out the appropriate include file in `tinyphp.php`
+To enable a module, simply uncomment the corresponding include in `tinyphp.php` and place the required library in the `vendor` folder.
 
 # License
 
@@ -123,42 +126,89 @@ If you have a common root path for all your endpoint, you can use the `RegisterR
 TinyPHP::RegisterRoot("/my/common/path");
 ```
 
-# Requirements
-
-TinyPHP comes equipped with all necessary functionalities straight out of the box, eliminating the need for any external libraries. However, should you wish to utilize any of the additional modules such as `mail`, `spreadsheet`, `stripe`, or `qrcodegenerator`, external libraries will be required.
-Here's the table
-
-| Module Name     | External Library Required | Version |
-| --------------- | ------------------------- | ------- |
-| mail            | PHPMailer                 | 6.9.1   |
-| spreadsheet     | PhpSpreadsheet            | 1.29.0  |
-| stripe          | stripe-php                | 13.11.0 |
-| qrcodegenerator | phpqrcode                 | N/A     |
-
-To enable a module, simply uncomment the corresponding include in `tinyphp.php` and place the required library in the `vendor` folder.
-
 # Examples
 
-Some useful examples.
+Some examples. More examples can be found in the `/examples` folder
 
 ## Web application
 
+Folder structure:
+
+```
++-- demo
+    |
+    +-- .htaccess
+    |
+    +-- main.php
+    |
+    +-- html
+    |   |
+    |   +-- login.php
+    |   |
+    |   +-- 404.php
+    |
+    +-- tinyphp
+        |
+        +-- tinyphp.php
+        |
+        +-- ...
+```
+
+File `main.php`
+
 ```php
+require 'tinyphp/tinyphp.php';
+
 TinyPHP::RegisterRoot("/demo");
 TinyPHP::RegisterRoute("/", "html/dashboard.php");
 TinyPHP::RegisterRoute("/login", "html/login.php");
-TinyPHP::RegisterRoute("/user", "html/user.php");
-TinyPHP::RegisterRoute("/menu", "html/menu.php");
 TinyPHP::Register404("html/404.php");
 
 TinyPHP::Run();
 ```
 
-## REST API with one endpoint
+File `.htaccess`
 
-File `index.php`
+```
+RewriteEngine On
+RewriteCond %{HTTP:X-Forwarded-Proto} !https
+RewriteCond %{HTTPS} off
+
+RewriteRule .* https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+RewriteRule ^(js|css|images)/(.*)$ demo/$1/$2 [NE,QSA,L]
+RewriteRule ^/?([a-z,0-9,-,/]*)$ demo/main.php [NE,QSA,L]
+
+# # av:php5-engine
+AddHandler av-php82 .php
+```
+
+## REST API with one endpoint (getuser)
+
+Folder structure:
+
+```
++-- api
+    |
+    +-- 1.0.0
+    |   |
+    |   +-- api.php
+    |   |
+    |   +-- endpoints
+    |       |
+    |       +-- getuser.php
+    |
+    +-- tinyphp
+        |
+        +-- tinyphp.php
+        |
+        +-- ...
+```
+
+File `api.php`
 
 ```php
+require '../tinyphp/tinyphp.php';
+
 TinyPHP::RegisterRoot("/api/1.0.0");
 TinyPHP::RegisterRoute("/getuser", "endpoints/getuser.php");
 
@@ -186,9 +236,10 @@ Db::Init($dbConfig, "DbErrorCallback");
 $get = API::Get();
 $userid = $get->id;
 
-// launch query
+// launch the query
 $res = Db::Query("SELECT * FROM users WHERE id = ?", [$userid]);
 
+// return the results
 Api::Ok($res);
 ```
 
