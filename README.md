@@ -128,7 +128,7 @@ TinyPHP::RegisterRoot("/my/common/path");
 
 # Examples
 
-Some examples. More examples can be found in the `/examples` folder
+Some examples.
 
 ## Web application
 
@@ -248,3 +248,7 @@ Invoking the API
 ```
 https://myhost/api/1.0.0/getuser?id=12
 ```
+
+# Documentation
+
+Please check DOCS.md

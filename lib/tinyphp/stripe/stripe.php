@@ -13,6 +13,15 @@ require_once(TINYPHP_ROOT.'/vendor/stripe-php-13.11.0/init.php');
 // 1 - Call Init() to initialize the library. Pass the configuration (See config/config.json)
 // 2 - Call ProcessWebHook() to process the response from Stripe. "paymentSuccessCallback" is called with the user email and the purchase payload specified in Start(). Do not send any output.
 
+/*
+{
+    "phpSecretKey": "sk_live_xxxxxxxxxxxxxxx",
+    "jsPublicKey": "pk_live_xxxxxxxxxxxxxxx",
+    "endpointSecret": "whsec_xxxxxxxxxxxxxxx",
+    "version": "YYYY-MM-DD"
+}
+*/
+
 class Stripe
 {
     public static $config = null;

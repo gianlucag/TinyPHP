@@ -1,23 +1,5 @@
 <?php
 
-/*
-    Config section:
-
-    "dictionary": {
-        "default_language": "it",
-        "languages": [
-            {
-                "lang": "it",
-                "file": "dictionaries/it.json"
-            },
-            {
-                "lang": "en",
-                "file": "dictionaries/en.json"
-            }
-        ]
-    }
-*/
-
 class Dictionary
 {
     private static $dictionaries = [];
@@ -34,11 +16,6 @@ class Dictionary
             $dictionary = json_decode(file_get_contents($language->file));
             self::$dictionaries[$language->lang] = $dictionary;
         }
-    }
-
-    public static function Add($lang, $jsonFile)
-    {
-
     }
     
     public static function Translate($tag, $values = [])
