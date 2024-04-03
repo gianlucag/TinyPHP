@@ -43,21 +43,21 @@ Kind of. It provides built-in functions for common tasks, but it doesn't force a
 
 It's really just a set of libraries for commonly used functions, cutting down on the amount of code you have to write.
 
-# Why another framewor...ehm... collection of libraries?
+# Why another collection of libraries?
 
-I frequently find myself repeatedly writing certain functions or transferring them from one project to another. Over the years, I've accumulated a variety of functionalities that address a wide range of API and web use cases. Ultimately, I've made the decision to centralize them on GitHub, assigning them a uniform name, and adopting proper tagging and versioning practices, something I should have done right from the beginning :-)
+I frequently find myself repeatedly writing certain functions or transferring them from one project to another. Functions that I could not find (and shouldn't be found) on regular PHP frameworks. Over the years, I've accumulated a variety of functionalities that address a wide range of API and web use cases. Ultimately, I've made the decision to centralize them on GitHub, assigning them a uniform name, something I should have done right from the beginning :-)
 
 # Why I should use it?
 
-If you aim to swiftly create an API, a straightforward web application, or a website without introducing the intricacies associated with PHP frameworks such as CakePHP and Laravel, this tool is well-suited for the task.
+If you aim to swiftly create a very simple API, a straightforward web application, or a website without introducing the intricacies associated with PHP frameworks such as CakePHP and Laravel, this tool is well-suited for the task.
 
 # Requirements
 
 TinyPHP requires `PHP 7.4` or greater.
 Also, TinyPHP comes equipped with all necessary functionalities straight out of the box, eliminating the need for any external libraries. However, should you wish to utilize any of the additional modules such as `mail`, `spreadsheet`, `stripe`, or `qrcodegenerator`, external libraries will be required.
-Here's the table
+Here's the dependency table:
 
-| Module Name     | External Library Required | Version |
+| TinyPHP module  | External Library Required | Version |
 | --------------- | ------------------------- | ------- |
 | mail            | PHPMailer                 | 6.9.1   |
 | spreadsheet     | PhpSpreadsheet            | 1.29.0  |
@@ -251,4 +251,4 @@ https://myhost/api/1.0.0/getuser?id=12
 
 # Documentation
 
-Please check DOCS.md
+For a comprehensive overview of modules and methods, please refer to the complete [documentation](docs/README.md).
