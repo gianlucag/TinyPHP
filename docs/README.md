@@ -2,6 +2,62 @@
 
 List of modules and their methods:
 
+## TinyPHP
+
+### RegisterRoute
+
+Attach a route to a page
+
+```php
+$path = "/login";
+$controller = "html/login.php";
+TinyPHP::RegisterRoute($path, $controller);
+```
+
+### RegisterRoot
+
+Specifies the root path common to all routes. That's to avoid specifying the common path over and over on all `RegisterRoute()` calls.
+
+```php
+$rootPath = "/demo";
+TinyPHP::RegisterRoot($rootPath);
+```
+
+### Register404
+
+Register the special 404 not found controller.
+
+```php
+$notFoundController = "/html/404.php";
+TinyPHP::Register404($notFoundController);
+```
+
+### RegisterMaintenance
+
+Register the special maintenance page (visible to any client trying to request any route).
+
+```php
+$maintenanceController = "/html/maintenance.php";
+TinyPHP::RegisterMaintenance($maintenanceController);
+```
+
+### EnableMaintenance
+
+Activate maintenance mode. The specified IP address will be exempted from maintenance mode, allowing normal access to the website. Typically, this would be the IP address of the client conducting maintenance on the website.
+
+```php
+$allowedIPAddress = "192.168.1.100";
+TinyPHP::EnableMaintenance($allowedIPAddress);
+```
+
+### Run
+
+Serves the incoming client request. This method should be called last, after all the route registration and modules initialization has been done.
+
+```php
+TinyPHP::Run();
+```
+
 ## API
 
 ### Ok
