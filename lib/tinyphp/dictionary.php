@@ -35,7 +35,7 @@ class Dictionary
     {
         if($lang)
         {
-            self::$lang = $lang;
+            self::$lang = array_key_exists($lang, self::$dictionaries) ? $lang : self::$defaultLang;
         }
         else
         {
