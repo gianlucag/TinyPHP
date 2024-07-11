@@ -159,7 +159,7 @@ $plainBase64 = Crypt::Decrypt("mycyphertext", "mykey");
 
 ## Currency
 
-Amounts are in cents (e.g. 20.99 is represented as 2099).
+Manages currency values.
 
 ### Init
 
@@ -167,17 +167,41 @@ Initialization:
 
 ```php
 $format = "€ #,#";
-Currency::Init($format);
+$decimalDigits = 2;
+Currency::Init($format, $decimalDigits);
 ```
 
-### Show
+### Format
 
 Format an amount:
 
 ```php
 $amount = 1999;
-$formattedAmount = Currency::Show($amount);
+$options = [
+    "format" => "€ #,#", // optional, if a different format is required
+    "fractDigits" => 2, // optional, fractional digits to display
+];
+$formattedAmount = Currency::Format($amount);
 echo $formattedAmount; // "€ 19,99"
+```
+
+```php
+$amount = 1999;
+$options = [
+    "fractDigits" => 1,
+];
+$formattedAmount = Currency::Format($amount);
+echo $formattedAmount; // "€ 19,9"
+```
+
+### Parse
+
+Parse a currency value:
+
+```php
+$raw = "19,99"
+$value = Currency::Parse($raw);
+echo $value; // 1999
 ```
 
 ## Date
@@ -315,7 +339,7 @@ $config = (object)[
     "name" => "mydbname",
 ];
 
-Db::Init($config, OnDbErrorCallback);
+Db::Init($config, "OnDbErrorCallback");
 ```
 
 ### Query
@@ -354,8 +378,8 @@ Dictionary example:
 
 ```json
 {
-  "404_TITLE": "404",
-  "404_BODY": "Page not found"
+	"404_TITLE": "404",
+	"404_BODY": "Page not found"
 }
 ```
 
@@ -378,13 +402,20 @@ etxt("404_BODY"); // "Page not found"
 
 ### SetLanguage
 
-Set the language to a specific one:
+Set the language to a specific one. If not present in the language list, the default is used (see config object). If the language is not passed, it auto detects the client language.
 
 ```php
 Dictionary::SetLanguage("it");
 ```
 
-Auto detect the user browser language. If not present in the language list, the default is used (see config object).
+### GetLanguage
+
+Get the current set language
+
+```php
+$lang = Dictionary::GetLanguage();
+echo $lang; // "it"
+```
 
 ```php
 Dictionary::SetLanguage();
@@ -569,16 +600,16 @@ Example email template. On the template, use `%0%`, `%1%`, `%2%`, etc.. as index
 ```html
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
-  <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-  </head>
-  <body>
-    Hello %0% %1%
-    <br />
-    Your name is %0%, your surname is %1%
-    <br />
-    <img src="cid1:logo.jpg" width="130px" />
-  </body>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	</head>
+	<body>
+		Hello %0% %1%
+		<br />
+		Your name is %0%, your surname is %1%
+		<br />
+		<img src="cid1:logo.jpg" width="130px" />
+	</body>
 </html>
 ```
 
@@ -759,7 +790,7 @@ Javascript side:
 
 ```javascript
 $("#buy_button").on("click", () => {
-  launchStripePaymentProcess();
+	launchStripePaymentProcess();
 });
 ```
 
@@ -776,26 +807,132 @@ function paymentSuccessCallback($transactionId, $userEmail, $purchasePayload)
 Stripe::ProcessWebHook($paymentSuccessCallback);
 ```
 
-## DbAuth
+## Auth
 
-Authentication against a MySQL database.
+Authentication. This module provides a simple authentication system using cookie-based or token-based authentication. It allows for user login, session management, and user information retrieval.
+
+### Plugins
+
+This module utilizes plugins to handle user and session management. These plugins implement specific interfaces that define the required methods for interacting with user data and sessions. Here are the details of each plugin.
+
+The database implementation for the plugins are already provided buy the module (`AuthPluginDbUser` and `AuthPluginDbSession`).
+
+### Default user plugin
+
+```php
+$options = (object)[
+    "tableName" => "customers",
+    "userIdFieldName" => "email",
+    "usernameFieldName" => "email",
+    "passwordFieldName" => "password"
+];
+
+$sessionPlugin = new AuthPluginDbUser();
+$sessionPlugin->Init($options);
+```
+
+If needed, it's also possible to redefine the password check algorithm:
+
+```php
+$options = (object)[
+    "tableName" => "customers",
+    "userIdFieldName" => "email",
+    "usernameFieldName" => "email",
+    "passwordFieldName" => "password"
+];
+
+function CustomPasswordCheckFunction($password, $storedPassword)
+{
+    return sha1($password) == $storedPassword;
+}
+
+
+$sessionPlugin = new AuthPluginDbUser();
+$sessionPlugin->Init($options, "CustomPasswordCheckFunction");
+```
+
+### Default session plugin
+
+```php
+$options = (object)[
+    "tableName" => "sessions",
+    "sessionIdFieldName" => "sessionid",
+    "tokenFieldName" => "token"
+];
+
+$sessionPlugin = new AuthPluginDbSession();
+$sessionPlugin->Init($options);
+```
+
+If you need to use a different database or authentication mechanism, you can create custom plugins by implementing the respective interfaces with your custom behavior.
+
+Here's the interface for the two plugins:
+
+```php
+interface AuthUserInterface {
+    public function Login($username, $password); // returns token on success, false on failure/denied
+    public function GetUserId($username); // returns the user id
+    public function GetUserInfo($id); // returns the user object
+}
+
+interface AuthSessionInterface {
+    public function AddSession($id, $token);
+    public function DeleteSessions($id);
+    public function DeleteSession($token);
+    public function GetSessionId($token); // returns the session id
+}
+```
 
 ### Init
 
-Initialization.
+Initialize the authentication module.
+
+Using cookie:
 
 ```php
-$config = (object)[
-    "userTableName" => "demo_users",
-    "userIdFieldName"=> "id",
-    "userUsernameFieldName" => "username",
-    "userPasswordFieldName" => "password",
-    "sessionTableName" => "demo_sessions",
-    "sessionUserIdFieldName" => "userid",
-    "sessionTokenFieldName" => "authtoken"
+$options = (object)[
+    "method" => "cookie",
+    "cookieName" => "my-cookie-name"
 ];
 
-DbAuth::Init($config);
+Auth::Init($options, $sessionPlugin, $userPlugin);
+```
+
+Using x-auth token:
+
+```php
+$options = (object)[
+    "method": "xauth"
+];
+
+Auth::Init($options, $sessionPlugin, $userPlugin);
+```
+
+### Login
+
+Authenticate the user. Returns `false` if unsuccessful, returns a sessionToken if successful (and set the cookie, if method is `cookie`)
+
+```php
+$username = "username";
+$password = "password";
+
+$sessionToken = Auth::Login($username, $password);
+```
+
+### LogoutAllSessions
+
+Logout all current logged in clients belonging to the user.
+
+```php
+Auth::LogoutAllSessions();
+```
+
+### LogoutThisSession
+
+Logout the current client.
+
+```php
+Auth::LogoutThisSession();
 ```
 
 ### IsLogged
@@ -803,116 +940,13 @@ DbAuth::Init($config);
 Is the user logged ?
 
 ```php
-$isLogged = DbAuth::IsLogged($config);
+$isLogged = Auth::IsLogged($config);
 ```
 
-### GetLoggedUser
+### GetLoggedUserInfo
 
 Get the current logged in user data.
 
 ```php
-$user = DbAuth::GetLoggedUser();
-```
-
-### Login
-
-Get the current logged in user data. Returns `false` if unsuccessful, returns a sessionToken if successful.
-
-```php
-$username = "gianluca";
-$password = "password";
-
-$sessionToken = DbAuth::Login($username, $password);
-```
-
-### LogoutAllClients
-
-Logout all current logged in clients belonging to the user.
-
-```php
-DbAuth::LogoutAllClients();
-```
-
-### LogoutClient
-
-Logout the current client of the user.
-
-```php
-DbAuth::LogoutClient();
-```
-
-## Auth
-
-Authentication base functions.
-
-### Init
-
-Initialization. Use cookie. By default, uses `password_hash` and `password_verify` to hash and verify the user password.
-
-Using cookie:
-
-```php
-$authMode = "cookie";
-$cookieName = "cookiename";
-
-Auth::Init($authMode, $cookieName);
-```
-
-Using x-auth token:
-
-```php
-$authMode = "xauth";
-
-Auth::Init($authMode);
-```
-
-Using custom hashing and verifying functions:
-
-```php
-function passwordCheckFunction($password, $storedPassword)
-{
-    return sha1($password) == $storedPassword;
-}
-
-function passwordHashFunction($password)
-{
-    return sha1($password);
-}
-
-$authMode = "cookie";
-$cookieName = "cookiename";
-
-Auth::Init(
-    $authMode,
-    $cookieName,
-    $passwordCheckFunction,
-    $passwordHashFunction
-);
-```
-
-### GetCurrentToken
-
-Get the current session token.
-
-```php
-$sessionToken = Auth::GetCurrentToken();
-```
-
-### ComputeHashPassword
-
-Compute the hash of the user password.
-
-```php
-$password = "password";
-$hash = Auth::ComputeHashPassword($password);
-```
-
-### Login
-
-Authenticate the user. Returns `false` if unsuccessful, returns a sessionToken if successful.
-
-```php
-$password = "password";
-$storedPassword = "password";
-$sessionToken = Auth::Login($password, $storedPassword);
+$user = Auth::GetLoggedUserInfo();
 ```

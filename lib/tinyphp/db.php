@@ -43,10 +43,6 @@ class Db
 			$res = $stmt->fetchAll(PDO::FETCH_ASSOC);
 			return $res;
 		}
-		catch (PDOException $e)
-		{	
-			if(self::$error) call_user_func(self::$error, $e->getMessage());
-		}
 		catch (Exception $e)
 		{
 			if(self::$error) call_user_func(self::$error, $e->getMessage());

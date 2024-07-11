@@ -1,7 +1,5 @@
 <?php
-require TINYPHP_ROOT.'/vendor/PHPMailer-6.9.1/src/Exception.php';
-require TINYPHP_ROOT.'/vendor/PHPMailer-6.9.1/src/PHPMailer.php';
-require TINYPHP_ROOT.'/vendor/PHPMailer-6.9.1/src/SMTP.php';
+
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
@@ -15,7 +13,8 @@ class Mail
         {
             for($v = 0; $v < count($values); $v++)
             {
-                $body = str_replace("%".$v."%", iconv('UTF-8', 'windows-1252', $values[$v]), $body);
+                //$body = str_replace("%".$v."%", iconv('UTF-8', 'windows-1252', $values[$v]), $body);
+                $body = str_replace("%".$v."%", $values[$v], $body);
             }
         }
 

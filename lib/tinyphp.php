@@ -1,38 +1,111 @@
 <?php
 session_start();
 error_reporting(E_ALL);
-header('Cache-Control: no cache');
+header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
+header("Cache-Control: post-check=0, pre-check=0", false);
+header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept, x-auth-token");
 
 define("TINYPHP_ROOT", __DIR__);
 
-// enabled modules
-include_once("tinyphp/config.php");
-include_once("tinyphp/api.php");
-include_once("tinyphp/db.php");
-include_once("tinyphp/auth.php");
-include_once("tinyphp/dbauth/dbauth.php");
-include_once("tinyphp/logger.php");
-include_once("tinyphp/crypt.php");
-include_once("tinyphp/dictionary.php");
-include_once("tinyphp/download.php");
-include_once("tinyphp/upload.php");
-include_once("tinyphp/date.php");
-include_once("tinyphp/input.php");
-include_once("tinyphp/currency.php");
-//include_once("tinyphp/mail/mail.php");
-//include_once("tinyphp/spreadsheet/spreadsheet.php");
-//include_once("tinyphp/captcha.php");
-//include_once("tinyphp/stripe/stripe.php");
-//include_once("tinyphp/qrcodegenerator.php");
+
+enum TinyPHPmodule {
+    case CONFIG;
+    case API;
+    case DB;
+    case AUTH;
+    case LOGGER;
+    case CRYPT;
+    case DICTIONARY;
+    case DOWNLOAD;
+    case UPLOAD;
+    case DATE;
+    case INPUT;
+    case CURRENCY;
+    case MAIL;
+    case SPREADSHEET;
+    case CAPTCHA;
+    case PAYMENT;
+    case QRCODE;
+}
 
 class TinyPHP
 {
+
     private static $routes = null;
     private static $root = null;
     private static $page404 = null;
     private static $pageMaintenance = null;
     private static $maintenanceAllowedIPAddress = null;
     
+    public static function EnableModule(TinyPHPmodule $module, $libraryFolderPath = null)
+    {
+        switch($module)
+        {
+            case TinyPHPmodule::CONFIG:
+                require_once("tinyphp/config.php");
+                break;
+            case TinyPHPmodule::API:
+                require_once("tinyphp/api.php");
+                break;
+            case TinyPHPmodule::DB:
+                require_once("tinyphp/db.php");
+                break;
+            case TinyPHPmodule::AUTH:
+                require_once("tinyphp/auth/auth.php");
+                require_once("tinyphp/auth/authPluginDbSession.php");
+                require_once("tinyphp/auth/authPluginDbUser.php");
+                break;
+            case TinyPHPmodule::LOGGER:
+                require_once("tinyphp/logger.php");
+                break;
+            case TinyPHPmodule::CRYPT:
+                require_once("tinyphp/crypt.php");
+                break;
+            case TinyPHPmodule::DICTIONARY:
+                require_once("tinyphp/dictionary.php");
+                break;
+            case TinyPHPmodule::DOWNLOAD:
+                require_once("tinyphp/download.php");
+                break;
+            case TinyPHPmodule::UPLOAD:
+                require_once("tinyphp/upload.php");
+                break;
+            case TinyPHPmodule::DATE:
+                require_once("tinyphp/date.php");
+                break;
+            case TinyPHPmodule::INPUT:
+                require_once("tinyphp/input.php");
+                break;
+            case TinyPHPmodule::CURRENCY:
+                require_once("tinyphp/currency.php");
+                break;
+            case TinyPHPmodule::MAIL:
+                require_once($libraryFolderPath."/src/Exception.php");
+                require_once($libraryFolderPath."/src/PHPMailer.php");
+                require_once($libraryFolderPath."/src/SMTP.php");
+                require_once("tinyphp/mail.php");
+                break;
+            case TinyPHPmodule::SPREADSHEET:
+                require_once($libraryFolderPath."/autoload.php");
+                require_once("tinyphp/spreadsheet.php");
+                break;
+            case TinyPHPmodule::CAPTCHA:
+                require_once("tinyphp/captcha.php");
+                break;
+            case TinyPHPmodule::PAYMENT:
+                require_once($libraryFolderPath."/init.php");
+                require_once("tinyphp/stripe.php");
+                break;
+            case TinyPHPmodule::QRCODE:
+                require_once($libraryFolderPath."/phpqrcode.php");
+                require_once("tinyphp/qrcodegenerator.php");
+                break;
+            default:
+                break;
+        }
+    }
+
     private static function GetClientIPAddress()
     {
         if (!empty($_SERVER['HTTP_CLIENT_IP']))
@@ -75,6 +148,12 @@ class TinyPHP
 
     public static function Run()
     {
+        if($_SERVER['REQUEST_METHOD'] !== 'POST' && $_SERVER['REQUEST_METHOD'] !== 'GET')
+        {
+            http_response_code(200);
+            exit;
+        }
+
         $requestUri = $_SERVER['REQUEST_URI'];
         $path = self::GetPathFromRequestUri($requestUri);
 

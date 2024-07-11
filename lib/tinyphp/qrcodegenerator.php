@@ -1,5 +1,4 @@
 <?php
-require_once(TINYPHP_ROOT.'/vendor/phpqrcode/phpqrcode.php');
 
 class QRCodeGenerator
 {

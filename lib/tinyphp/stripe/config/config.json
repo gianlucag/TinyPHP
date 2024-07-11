@@ -1,8 +1,0 @@
-{
-    "stripe": {
-        "phpSecretKey": "sk_live_xxxxxxxxxxxxxxx",
-        "jsPublicKey": "pk_live_xxxxxxxxxxxxxxx",
-        "endpointSecret": "whsec_xxxxxxxxxxxxxxx",
-        "version": "YYYY-MM-DD"
-    }
-}

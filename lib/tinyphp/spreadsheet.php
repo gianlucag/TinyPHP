@@ -1,7 +1,5 @@
 <?php
 
-require_once(TINYPHP_ROOT.'/vendor/PhpSpreadsheet-1.29.0/autoload.php');
-
 class SpreadSheet
 {
     private static $totCols = null;
@@ -100,8 +98,8 @@ class SpreadSheet
         $row = array();
         for ($colIndex = 0; $colIndex < self::$totCols; $colIndex++)
         {
-            $value = self::$spreadsheet->setActiveSheetIndex(0)->getCell([$colIndex + 1, $rowIndex + 1])->getValue();
-            $value = $value == null ? "" : trim($value);
+            $value = (string)self::$spreadsheet->setActiveSheetIndex(0)->getCell([$colIndex + 1, $rowIndex + 1])->getValue();
+            $value = ($value === null) ? "" : trim($value);
             if($maxCellLength)
             {
                 $value = substr($value, 0, $maxCellLength);

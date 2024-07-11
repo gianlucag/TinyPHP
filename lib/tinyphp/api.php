@@ -4,7 +4,7 @@ class API
 {
 	private static $routes = null;
 
-	private function __construct()
+	private static function AddHeaders()
 	{
 		header("Access-Control-Allow-Origin: *");
 		header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept, x-auth-token");
@@ -13,6 +13,7 @@ class API
 	public static function Error($statusCode = 500, $errorData = null)
 	{
 		ob_end_clean();
+		self::AddHeaders();
 		http_response_code($statusCode);
 		if ($errorData)
 			echo $errorData;
@@ -22,6 +23,7 @@ class API
 	public static function Ok($data = null)
 	{
 		ob_end_clean();
+		self::AddHeaders();
 		echo json_encode($data, JSON_BIGINT_AS_STRING);
 		die();
 	}

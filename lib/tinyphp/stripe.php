@@ -1,5 +1,4 @@
 <?php
-require_once(TINYPHP_ROOT.'/vendor/stripe-php-13.11.0/init.php');
 
 // HOWTO
 

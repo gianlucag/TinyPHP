@@ -21,7 +21,7 @@ class Dictionary
     public static function Translate($tag, $values = [])
     {
         $dictionary = self::$dictionaries[self::$lang];
-        $txt = isset($dictionary->$tag) ? $dictionary->$tag : "???";
+        $txt = isset($dictionary->$tag) ? $dictionary->$tag : "{{".$tag."}}";
         $txt = str_replace('%', '%s', $txt);
         return $values == [] ? $txt : vsprintf($txt, $values);
     }
