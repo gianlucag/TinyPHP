@@ -14,6 +14,20 @@ $controller = "html/login.php";
 TinyPHP::RegisterRoute($path, $controller);
 ```
 
+You can specify dynamic route params in the URL (e.g. :groupid).
+
+```php
+TinyPHP::RegisterRoute("/groups/:groupid/categories", "html/categories.php");
+```
+
+## GetRouteParam
+
+Gets the route param "groupid" from the URL.
+
+```php
+TinyPHP::GetRouteParam("groupid");
+```
+
 ### RegisterRoot
 
 Specifies the root path common to all routes. That's to avoid specifying the common path over and over on all `RegisterRoute()` calls.

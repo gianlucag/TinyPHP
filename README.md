@@ -136,7 +136,7 @@ TinyPHP::RegisterRoute("/groups/:groupid/categories", "html/categories.php");
 
 ## GetRouteParam
 
-Gets the route param "igroupidd" from the URL.
+Gets the route param "groupid" from the URL.
 
 ```php
 TinyPHP::GetRouteParam("groupid");
