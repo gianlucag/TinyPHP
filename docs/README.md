@@ -595,6 +595,17 @@ $isSent = Mail::Send(
 );
 ```
 
+### SetDebug
+
+For debugging purposes. All emails will be sent to the provided test email.
+
+```php
+$testEmail = "test@email.com";
+Mail::SetDebug($testEmail);
+```
+
+### Email template
+
 Example email template. On the template, use `%0%`, `%1%`, `%2%`, etc.. as indexed placeholders for the value array `$values`:
 
 ```html

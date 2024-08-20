@@ -5,8 +5,24 @@ use PHPMailer\PHPMailer\Exception;
 
 class Mail
 {
+    private static $debugMode = false;
+    private static $testEmail = null;
+
+    public static function SetDebug($testEmail)
+    {
+        self::$debugMode = true;
+        self::$testEmail = $testEmail;
+    }
+
     public static function Send($from, $fromname, $to, $subject, $templateFilePath, $values = null, $attachments = null, $ccs = null)
     {
+        if(self::$debugMode)
+        {
+            $subject = "[TEST TO ".$to."] ".$subject;
+            $to = self::$testEmail;
+            $css = null;
+        }
+
         $body = file_get_contents($templateFilePath);
 
         if($values)
