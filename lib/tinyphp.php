@@ -37,7 +37,8 @@ class TinyPHP
     private static $page404 = null;
     private static $pageMaintenance = null;
     private static $maintenanceAllowedIPAddress = null;
-    
+    private static $routeParams = null;
+
     public static function EnableModule(TinyPHPmodule $module, $libraryFolderPath = null)
     {
         switch($module)
@@ -146,6 +147,40 @@ class TinyPHP
         }
     }
 
+    private static function Match($routes, $path)
+    {
+        foreach ($routes as $route => $destination)
+        {
+            $pattern = self::ConvertDynamicParamsToRegex($route);
+
+            if (preg_match($pattern, $path, $matches))
+            {
+                array_shift($matches);
+
+                $paramNames = self::ExtractParamNames($route);
+                $params = array_combine($paramNames, $matches);
+
+                return (object)[
+                    'destination' => $destination,
+                    'params' => $params
+                ];
+            }
+        }
+        return null;
+    }
+
+    private static function ConvertDynamicParamsToRegex($route)
+    {
+        $escapedRoute = preg_quote($route, '/');
+        $pattern = '/^' . preg_replace('/\\\:([a-zA-Z0-9_]+)/', '([^\/]+)', $escapedRoute) . '$/';
+        return $pattern;
+    }
+
+    private static function ExtractParamNames($route) {
+        preg_match_all('/:(\w+)/', $route, $matches);
+        return $matches[1];
+    }
+
     public static function Run()
     {
         if($_SERVER['REQUEST_METHOD'] !== 'POST' && $_SERVER['REQUEST_METHOD'] !== 'GET')
@@ -163,9 +198,12 @@ class TinyPHP
         }
         else
         {
-            if (isset(self::$routes[$path]))
+            $matchedRoute = self::Match(self::$routes, $path);
+
+            if ($matchedRoute)
             {
-                $page = self::$routes[$path];
+                self::$routeParams = $matchedRoute->params;
+                $page = $matchedRoute->destination;
     
                 if (file_exists($page))
                 {
@@ -181,6 +219,11 @@ class TinyPHP
                 self::Run404();
             }
         }
+    }
+
+    public static function GetRouteParam($paramName)
+    {
+        return isset(self::$routeParams[$paramName]) ? self::$routeParams[$paramName] : null;
     }
 
     public static function RegisterRoute($path, $controller)

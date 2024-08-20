@@ -128,6 +128,20 @@ Routing in TinyPHP is done by matching a URL pattern with a php script (the cont
 TinyPHP::RegisterRoute("/login", "html/login.php");
 ```
 
+You can specify dynamic route params in the URL (e.g. :groupid).
+
+```php
+TinyPHP::RegisterRoute("/groups/:groupid/categories", "html/categories.php");
+```
+
+## GetRouteParam
+
+Gets the route param "igroupidd" from the URL.
+
+```php
+TinyPHP::GetRouteParam("groupid");
+```
+
 ## Root path
 
 If you have a common root path for all your endpoint, you can use the `RegisterRoot` function.
