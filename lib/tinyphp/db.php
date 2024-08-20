@@ -45,7 +45,12 @@ class Db
 		}
 		catch (Exception $e)
 		{
-			if(self::$error) call_user_func(self::$error, $e->getMessage());
+			$msg = [
+				"query" => $query,
+				"error" =>  $e->getMessage()
+			];
+
+			if(self::$error) call_user_func(self::$error, $msg);
 		}
 	}	
 }
