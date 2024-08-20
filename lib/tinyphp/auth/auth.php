@@ -8,9 +8,10 @@ interface AuthUserInterface {
 
 interface AuthSessionInterface {
     public function AddSession($id, $token);
-    public function DeleteSessions($id);
+    public function DeleteSessions($id); // if id is not specified, delete all session of current user
     public function DeleteSession($token);
     public function GetSessionId($token); // returns the session id
+    public function TruncateSessions(); // delete all sessions of all users
 }
 
 class Auth
@@ -18,8 +19,9 @@ class Auth
     private static $cookieName = null;
     private static $authMode = null;
     private static $authUserPlugin = null;
-    private static $authSessionPlugin = null;
+    private static $authSessionPlugins = [];
     private static $loggedUserId = null;
+    private static $sessionPluginName = null;
 
     private static function IsXAuthMode()
     {
@@ -58,22 +60,30 @@ class Auth
 
         return $token;
     }
+  
+    public static function SetSessionPlugin($pluginName)
+    {
+        self::$sessionPluginName = $pluginName;
+    }
 
-    public static function Init($config, &$authSessionPlugin, &$authUserPlugin = null)
+    public static function AddSessionPlugin($pluginName, $authSessionPlugin)
+    {
+        self::$authSessionPlugins[$pluginName] = $authSessionPlugin;
+    }
+
+    public static function Init($config, $authUserPlugin)
     {
         self::$authUserPlugin = $authUserPlugin;
-        self::$authSessionPlugin = $authSessionPlugin;
         self::$authMode = $config->method == "xauth" ? "xauth" : "cookie";
         self::$cookieName = isset($config->cookieName) ? $config->cookieName : null;
-        
+
         $currentToken = Auth::GetCurrentToken();
 
         if($currentToken)
         {
-            self::$loggedUserId = self::$authSessionPlugin->GetSessionId($currentToken);
+            self::$loggedUserId = self::$authSessionPlugins[self::$sessionPluginName]->GetSessionId($currentToken);
         }
     }
-
 
     public static function Login($username, $password)
     {  
@@ -89,8 +99,10 @@ class Auth
                 setcookie(self::$cookieName, $token, $expiry);
             }
     
-            $userId = self::$authUserPlugin->GetUserId($username);            
-            self::$authSessionPlugin->AddSession($userId, $token);
+            $userId = self::$authUserPlugin->GetUserId($username);    
+
+            self::$authSessionPlugins[self::$sessionPluginName]->AddSession($userId, $token);
+            self::$loggedUserId = $userId;
             return $token;
         }
 
@@ -99,12 +111,12 @@ class Auth
 
     public static function LogoutThisSession()
     {  
-        self::$authSessionPlugin->DeleteSession(Auth::GetCurrentToken());
+        self::$authSessionPlugins[self::$sessionPluginName]->DeleteSession(Auth::GetCurrentToken());
     }
 
-    public static function LogoutAllSessions()
+    public static function LogoutAllSessions($userId = null)
     {  
-        self::$authSessionPlugin->DeleteSessions(self::$loggedUserId);
+        self::$authSessionPlugins[self::$sessionPluginName]->DeleteSessions($userId ? $userId : self::$loggedUserId);
     }
 
     public static function IsLogged()
@@ -115,6 +127,16 @@ class Auth
     public static function GetLoggedUserInfo()
     {  
         return self::$authUserPlugin->GetUserInfo(self::$loggedUserId);
+    }
+
+    public static function SetNewPassword($password)
+    {  
+        return self::$authUserPlugin->SetNewPassword(self::$loggedUserId, $password);
+    }
+
+    public static function TruncateSessions()
+    {  
+        self::$authSessionPlugins[self::$sessionPluginName]->TruncateSessions();
     }
 }
 

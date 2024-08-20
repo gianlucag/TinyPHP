@@ -852,8 +852,8 @@ $options = (object)[
     "passwordFieldName" => "password"
 ];
 
-$sessionPlugin = new AuthPluginDbUser();
-$sessionPlugin->Init($options);
+$userPlugin = new AuthPluginDbUser();
+$userPlugin->Init($options);
 ```
 
 If needed, it's also possible to redefine the password check algorithm:
@@ -872,8 +872,8 @@ function CustomPasswordCheckFunction($password, $storedPassword)
 }
 
 
-$sessionPlugin = new AuthPluginDbUser();
-$sessionPlugin->Init($options, "CustomPasswordCheckFunction");
+$userPlugin = new AuthPluginDbUser();
+$userPlugin->Init($options, "CustomPasswordCheckFunction");
 ```
 
 ### Default session plugin
@@ -902,9 +902,10 @@ interface AuthUserInterface {
 
 interface AuthSessionInterface {
     public function AddSession($id, $token);
-    public function DeleteSessions($id);
+    public function DeleteSessions($id);  // if id is not specified, delete all session of current user
     public function DeleteSession($token);
     public function GetSessionId($token); // returns the session id
+    public function TruncateSessions();  // delete all sessions of all users
 }
 ```
 
@@ -920,7 +921,7 @@ $options = (object)[
     "cookieName" => "my-cookie-name"
 ];
 
-Auth::Init($options, $sessionPlugin, $userPlugin);
+Auth::Init($options, $userPlugin);
 ```
 
 Using x-auth token:
@@ -930,7 +931,26 @@ $options = (object)[
     "method": "xauth"
 ];
 
-Auth::Init($options, $sessionPlugin, $userPlugin);
+Auth::Init($options, $userPlugin);
+```
+
+### AddSessionPlugin
+
+Registers a session plugin into the Auth module.
+
+```php
+$pluginName = "customers";
+Auth::AddSessionPlugin($pluginName, $sessionCustomersPlugin);
+```
+
+The `AddSessionPlugin` method enables the registration of multiple session plugins, allowing for seamless switching between different entities on the fly, such as users and customers.
+
+### SetSessionPlugin
+
+Use a specific session plugin.
+
+```php
+Auth::SetSessionPlugin("customers");
 ```
 
 ### Login
@@ -974,4 +994,21 @@ Get the current logged in user data.
 
 ```php
 $user = Auth::GetLoggedUserInfo();
+```
+
+### SetNewPassword
+
+Set a new password for the current user
+
+```php
+$newPassword = "myNewPassword";
+Auth::SetNewPassword($newPassword);
+```
+
+### TruncateSessions
+
+Delete all sessions of all users
+
+```php
+Auth::TruncateSessions();
 ```
