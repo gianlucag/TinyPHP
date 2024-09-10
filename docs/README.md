@@ -574,7 +574,7 @@ $isHuman = Captcha::IsHuman($score = 0.5);
 
 ## Mail
 
-Send an email using a template.
+Send an email
 
 ### Send
 
@@ -585,8 +585,7 @@ $from = "senderi@gmail.com";
 $fromname = "Gianluca";
 $to = "receiver@gmail.com";
 $subject = "Email subject";
-$templateFilePath = "email_templates/welcome.html";
-$values = ["John", "Doe"];
+$content = "Hello world!\nBye bye!";
 $attachments = [
     "cid1", "email_attachments/logo.jpg",
     "cid2", "email_attachments/file.pdf",
@@ -602,8 +601,7 @@ $isSent = Mail::Send(
     $fromname,
     $to,
     $subject,
-    $templateFilePath,
-    $values,
+    $content,
     $attachments,
     $ccs
 );
@@ -618,24 +616,13 @@ $testEmail = "test@email.com";
 Mail::SetDebug($testEmail);
 ```
 
-### Email template
+### SetEmailSignature
 
-Example email template. On the template, use `%0%`, `%1%`, `%2%`, etc.. as indexed placeholders for the value array `$values`:
+Set the email signature. The signature is appended automatically to all emails.
 
-```html
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html>
-	<head>
-		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	</head>
-	<body>
-		Hello %0% %1%
-		<br />
-		Your name is %0%, your surname is %1%
-		<br />
-		<img src="cid1:logo.jpg" width="130px" />
-	</body>
-</html>
+```php
+$signature = "My email signature";
+Mail::SetEmailSignature($signature);
 ```
 
 ## SpreadSheet

@@ -7,6 +7,12 @@ class Mail
 {
     private static $debugMode = false;
     private static $testEmail = null;
+    private static $signature = null;
+
+    public static function SetEmailSignature($signature)
+    {
+        self::$signature = $signature;
+    }
 
     public static function SetDebug($testEmail)
     {
@@ -14,7 +20,7 @@ class Mail
         self::$testEmail = $testEmail;
     }
 
-    public static function Send($from, $fromname, $to, $subject, $templateFilePath, $values = null, $attachments = null, $ccs = null)
+    public static function Send($from, $fromname, $to, $subject, $content, $attachments = null, $ccs = null)
     {
         if(self::$debugMode)
         {
@@ -23,16 +29,31 @@ class Mail
             $css = null;
         }
 
-        $body = file_get_contents($templateFilePath);
+        $body = '
+        <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+        <html>
+        <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        </head>
+        <body bgcolor="#ffffff" text="#000000">
+        ';
 
-        if($values)
+        $body .= $content;
+        
+        $body .= '
+        <br />
+        <br />
+        ';
+
+        if(self::$signature)
         {
-            for($v = 0; $v < count($values); $v++)
-            {
-                //$body = str_replace("%".$v."%", iconv('UTF-8', 'windows-1252', $values[$v]), $body);
-                $body = str_replace("%".$v."%", $values[$v], $body);
-            }
+            $body .= self::$signature;
         }
+
+        $body .= '
+        </body>
+        </html> 
+        ';
 
         $mail = new PHPMailer(true);
         try
@@ -52,8 +73,8 @@ class Mail
     
             $mail->isHTML(true);
             $mail->Subject = $subject;
-            $mail->Body = $body;
-    
+            $mail->msgHTML($body);
+
             if($attachments)
             {
                 for($a = 0; $a < count($attachments); $a++)
