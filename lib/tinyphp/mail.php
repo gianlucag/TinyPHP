@@ -39,15 +39,11 @@ class Mail
         ';
 
         $body .= $content;
-        
-        $body .= '
-        <br />
-        <br />
-        ';
 
         if(self::$signature)
         {
-            $body .= self::$signature;
+            $body .= nl2br("\n\n--\n");
+            $body .= nl2br(self::$signature);
         }
 
         $body .= '
