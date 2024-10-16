@@ -46,6 +46,24 @@ $notFoundController = "/html/404.php";
 TinyPHP::Register404($notFoundController);
 ```
 
+### Register500
+
+Register the special 500 internal error page.
+
+```php
+$internalErrorController = "/html/500.php";
+TinyPHP::Register500($internalErrorController);
+```
+
+### ThrowError500
+
+Display the pre-registered 500 internal error page.
+
+```php
+$msg = "My error message";
+TinyPHP::ThrowError500($msg);
+```
+
 ### RegisterMaintenance
 
 Register the special maintenance page (visible to any client trying to request any route).

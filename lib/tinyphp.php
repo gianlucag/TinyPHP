@@ -9,37 +9,38 @@ header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Ac
 define("TINYPHP_ROOT", __DIR__);
 
 
-enum TinyPHPmodule {
-    case CONFIG;
-    case API;
-    case DB;
-    case AUTH;
-    case LOGGER;
-    case CRYPT;
-    case DICTIONARY;
-    case DOWNLOAD;
-    case UPLOAD;
-    case DATE;
-    case INPUT;
-    case CURRENCY;
-    case MAIL;
-    case SPREADSHEET;
-    case CAPTCHA;
-    case PAYMENT;
-    case QRCODE;
+class TinyPHPmodule
+{
+    const CONFIG = 'CONFIG';
+    const API = 'API';
+    const DB = 'DB';
+    const AUTH = 'AUTH';
+    const LOGGER = 'LOGGER';
+    const CRYPT = 'CRYPT';
+    const DICTIONARY = 'DICTIONARY';
+    const DOWNLOAD = 'DOWNLOAD';
+    const UPLOAD = 'UPLOAD';
+    const DATE = 'DATE';
+    const INPUT = 'INPUT';
+    const CURRENCY = 'CURRENCY';
+    const MAIL = 'MAIL';
+    const SPREADSHEET = 'SPREADSHEET';
+    const CAPTCHA = 'CAPTCHA';
+    const PAYMENT = 'PAYMENT';
+    const QRCODE = 'QRCODE';
 }
 
 class TinyPHP
 {
-
     private static $routes = null;
     private static $root = null;
     private static $page404 = null;
+    private static $page500 = null;
     private static $pageMaintenance = null;
     private static $maintenanceAllowedIPAddress = null;
     private static $routeParams = null;
 
-    public static function EnableModule(TinyPHPmodule $module, $libraryFolderPath = null)
+    public static function EnableModule($module, $libraryFolderPath = null)
     {
         switch($module)
         {
@@ -241,6 +242,11 @@ class TinyPHP
         self::$page404 = $controller;
     }
 
+    public static function Register500($controller)
+    {
+        self::$page500 = $controller;
+    }
+
     public static function RegisterMaintenance($controller)
     {
         self::$pageMaintenance = $controller;
@@ -249,6 +255,15 @@ class TinyPHP
     public static function EnableMaintenance($allowedIPAddress)
     {
         self::$maintenanceAllowedIPAddress = $allowedIPAddress;
+    }
+
+    public static function ThrowError500($msg = null)
+    {
+        if (self::$page500 && file_exists(self::$page500))
+        {
+            include_once(self::$page500);
+            die();
+        }
     }
 }
 

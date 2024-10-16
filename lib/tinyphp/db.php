@@ -52,7 +52,7 @@ class Db
 
 			if(self::$error) call_user_func(self::$error, $msg);
 		}
-	}	
+	}
 }
 
 ?>
