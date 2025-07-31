@@ -24,7 +24,16 @@ class API
 	{
 		ob_end_clean();
 		self::AddHeaders();
-		echo json_encode($data, JSON_BIGINT_AS_STRING);
+	
+		$json = json_encode($data, JSON_BIGINT_AS_STRING);
+	
+		if ($json === false) {
+			http_response_code(500);
+			echo json_last_error_msg();
+			die();
+		}
+	
+		echo $json;
 		die();
 	}
 
