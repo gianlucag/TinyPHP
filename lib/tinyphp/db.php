@@ -15,6 +15,25 @@ class Db
        	self::$error = $errorCallback;
     }
 
+	public static function BuildSchema()
+    {
+		try {
+			$schema = file_get_contents(self::$config->schema);
+			$queries = array_filter(array_map('trim', explode(";", $schema)));
+			foreach ($queries as $query) {
+				if (!empty($query)) {
+					self::Query($query, null);
+				}
+			}
+		} catch (Exception $e) {
+			if (self::$error) {
+				call_user_func(self::$error, ["error" => $e->getMessage()]);
+			} else {
+				throw $e;
+			}
+		}
+    }
+
 	private static function GetInstance()
 	{
 		if(self::$ctx == NULL)
@@ -35,6 +54,8 @@ class Db
 
 	public static function Query($query, $data)
 	{
+		$query = str_replace("{{prefix}}", self::$config->tablePrefix, $query);
+
 		try
 		{
 			$db = Db::GetInstance();
@@ -47,6 +68,7 @@ class Db
 		{
 			$msg = [
 				"query" => $query,
+				"data" => $data,
 				"error" =>  $e->getMessage()
 			];
 
