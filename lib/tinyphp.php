@@ -1,13 +1,15 @@
 <?php
 session_start();
 error_reporting(E_ALL);
+
 header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
 header("Cache-Control: post-check=0, pre-check=0", false);
-header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Credentials: true");
 header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept, x-auth-token");
 
 define("TINYPHP_ROOT", __DIR__);
 
+ob_start();
 
 class TinyPHPmodule
 {
