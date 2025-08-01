@@ -269,6 +269,8 @@ class TinyPHP
     {
         if (self::$page500 && file_exists(self::$page500))
         {
+            ob_end_clean();
+            $msg = json_encode($msg);
             include_once(self::$page500);
             die();
         }
