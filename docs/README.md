@@ -510,7 +510,7 @@ Generates QR-Codes.
 
 ### GetPng
 
-Send the QR-Code to the browser as a PNG:
+Send the QR-Code image to the browser as a PNG:
 
 ```php
 $qrcodedata = "test";
