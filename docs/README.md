@@ -481,6 +481,24 @@ Generic sanitization of the user input:
 $cleanMessage = Input::Clean($userMessage);
 ```
 
+## Output
+
+### e
+
+Sanitize output for display. Strips html tags.
+
+```php
+$cleanMessage = Output::e($userMessage);
+```
+
+### e (JavaScript function)
+
+Sanitize output for display. Strips html tags. Javascript clone of the same function.
+
+```js
+const cleanMessage = TinyPHP.e(userMessage);
+```
+
 ## Logger
 
 Multi sink logger. Log messages to files.

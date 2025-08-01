@@ -21,6 +21,7 @@ It provides the following functionalities:
 - Datetime (parse, format, math on dates)
 - Google Captcha v3
 - Input sanitization
+- Output sanitization
 - Email send (attachments, cc and bcc recipients)
 - Stripe (payments)
 - QRCodes
