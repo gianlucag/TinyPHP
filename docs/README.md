@@ -434,7 +434,7 @@ etxt("404_BODY"); // "Page not found"
 
 ### SetLanguage
 
-Set the language to a specific one. If not present in the language list, the default is used (see config object). If the language is not passed, it auto detects the client language.
+Set the language to a specific one. If not present in the language list, the default is used (see config object).
 
 ```php
 Dictionary::SetLanguage("it");
@@ -449,8 +449,13 @@ $lang = Dictionary::GetLanguage();
 echo $lang; // "it"
 ```
 
+### DetectLanguage
+
+Auto detects the client languagea and returns it. Returns null if the language could not be detected.
+
 ```php
-Dictionary::SetLanguage();
+$lang = Dictionary::DetectLanguage();
+echo $lang; // "it"
 ```
 
 ## Download

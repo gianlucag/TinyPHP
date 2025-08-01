@@ -20,7 +20,7 @@ class Dictionary
     
     public static function Translate($tag, $values = [])
     {
-        $dictionary = self::$dictionaries[self::$lang];
+        $dictionary = isset(self::$dictionaries[self::$lang]) ? self::$dictionaries[self::$lang] : null;
         $txt = isset($dictionary->$tag) ? $dictionary->$tag : "{{".$tag."}}";
         $txt = str_replace('%', '%s', $txt);
         return $values == [] ? $txt : vsprintf($txt, $values);
@@ -31,18 +31,14 @@ class Dictionary
         return self::$lang;
     }
 
-    public static function SetLanguage($lang = null)
+    public static function DetectLanguage()
     {
-        if($lang)
-        {
-            self::$lang = array_key_exists($lang, self::$dictionaries) ? $lang : self::$defaultLang;
-        }
-        else
-        {
-            $lang = isset($_SERVER['HTTP_ACCEPT_LANGUAGE']) ? substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2) : self::$defaultLang;
-            $lang = array_key_exists($lang, self::$dictionaries) ? $lang : self::$defaultLang;
-            self::$lang = $lang;
-        }
+        return isset($_SERVER['HTTP_ACCEPT_LANGUAGE']) ? substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2) : null;
+    }
+
+    public static function SetLanguage($lang)
+    {
+        self::$lang = array_key_exists($lang, self::$dictionaries) ? $lang : self::$defaultLang;
     }
 }
 
