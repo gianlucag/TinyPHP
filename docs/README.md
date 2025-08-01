@@ -210,7 +210,7 @@ Format an amount:
 ```php
 $amount = 1999;
 $options = [
-    "format" => "€ #,#", // optional, if a different format is required
+    "format" => "€ #i#,#f#", // optional, if a different format is required
     "fractDigits" => 2, // optional, fractional digits to display
 ];
 $formattedAmount = Currency::Format($amount);
