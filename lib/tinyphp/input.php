@@ -4,7 +4,12 @@ class Input
 {
     public static function Clean($input)
     {
-        return htmlspecialchars(trim($input));
+        if (is_string($input)) {
+            $input = trim($input);
+            return $input === '' ? null : $input;
+        }
+
+        return $input;
     }
 }
 
