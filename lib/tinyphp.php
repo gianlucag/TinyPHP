@@ -122,18 +122,16 @@ class TinyPHP
     {
         if (!empty($_SERVER['HTTP_CLIENT_IP']))
         {
-            $ip = $_SERVER['HTTP_CLIENT_IP'];
-        }
-        elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR']))
-        {
-            $ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
-        }
-        else
-        {
-            $ip = $_SERVER['REMOTE_ADDR'];
+            return $_SERVER['HTTP_CLIENT_IP'];
         }
 
-        return $ip;
+        if (!empty($_SERVER['HTTP_X_FORWARDED_FOR']))
+        {
+            $ips = explode(',', $_SERVER['HTTP_X_FORWARDED_FOR']);
+            return trim($ips[0]);
+        }
+
+        return $_SERVER['REMOTE_ADDR'] ?? 'UNKNOWN';
     }
 
     private static function GetPathFromRequestUri($requestUri)
