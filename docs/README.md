@@ -309,6 +309,26 @@ $timestamp = Date::ParseYMDHis($date);
 echo $timestamp; // "1982-05-19 21:30:45"
 ```
 
+### AddHours
+
+Add hours to a timestamp:
+
+```php
+$timestamp = "1982-05-19 21:30:45";
+$timestamp = Date::AddHours($timestamp, 2);
+echo $timestamp; // "1982-05-19 23:30:45";
+```
+
+### SubHours
+
+Subtract hours to a timestamp:
+
+```php
+$timestamp = "1982-05-19 21:30:45";
+$timestamp = Date::SubHours($timestamp, 2);
+echo $timestamp; // "1982-05-19 19:30:45";
+```
+
 ### AddDays
 
 Add days to a timestamp:
@@ -317,6 +337,16 @@ Add days to a timestamp:
 $timestamp = "1982-05-19 21:30:45";
 $timestamp = Date::AddDays($timestamp, 2);
 echo $timestamp; // "1982-05-21 21:30:45"
+```
+
+### SubDays
+
+Subtract days to a timestamp:
+
+```php
+$timestamp = "1982-05-19 21:30:45";
+$timestamp = Date::SubDays($timestamp, 2);
+echo $timestamp; // "1982-05-17 21:30:45";
 ```
 
 ### AddMonths
@@ -329,6 +359,16 @@ $timestamp = Date::AddMonths($timestamp, 2);
 echo $timestamp; // "1982-07-19 21:30:45"
 ```
 
+### SubMonths
+
+Subtract months to a timestamp:
+
+```php
+$timestamp = "1982-05-19 21:30:45";
+$timestamp = Date::SubMonths($timestamp, 2);
+echo $timestamp; // "1982-03-19 21:30:45";
+```
+
 ### AddYears
 
 Add years to a timestamp:
@@ -337,6 +377,16 @@ Add years to a timestamp:
 $timestamp = "1982-05-19 21:30:45";
 $timestamp = Date::AddYears($timestamp, 2);
 echo $timestamp; // "1984-05-19 21:30:45"
+```
+
+### SubYears
+
+Subtract years to a timestamp:
+
+```php
+$timestamp = "1982-05-19 21:30:45";
+$timestamp = Date::SubYears($timestamp, 2);
+echo $timestamp; // "1980-05-19 21:30:45";
 ```
 
 ### DiffDays

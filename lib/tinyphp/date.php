@@ -39,21 +39,51 @@ class Date
         return self::Parse($timestamp, "Y-m-d H:i:s");
     }
 
+    public static function AddHours($timestamp, $hours) {
+        $d = new DateTime($timestamp);
+        $d->modify("+$hours hours");
+        return $d->format("Y-m-d H:i:s");
+    }
+
+    public static function SubHours($timestamp, $hours) {
+        $d = new DateTime($timestamp);
+        $d->modify("-$hours hours");
+        return $d->format("Y-m-d H:i:s");
+    }
+    
     public static function AddDays($timestamp, $days) {
         $d = new DateTime($timestamp);
         $d->modify("+$days days");
         return $d->format("Y-m-d H:i:s");
     }
 
-    public static function AddMonths($timestamp, $days) {
+    public static function SubDays($timestamp, $days) {
         $d = new DateTime($timestamp);
-        $d->modify("+$days months");
+        $d->modify("-$days days");
         return $d->format("Y-m-d H:i:s");
     }
 
-    public static function AddYears($timestamp, $days) {
+    public static function AddMonths($timestamp, $howmany) {
         $d = new DateTime($timestamp);
-        $d->modify("+$days years");
+        $d->modify("+$howmany months");
+        return $d->format("Y-m-d H:i:s");
+    }
+
+    public static function SubMonths($timestamp, $howmany) {
+        $d = new DateTime($timestamp);
+        $d->modify("-$howmany months");
+        return $d->format("Y-m-d H:i:s");
+    }
+
+    public static function AddYears($timestamp, $howmany) {
+        $d = new DateTime($timestamp);
+        $d->modify("+$howmany years");
+        return $d->format("Y-m-d H:i:s");
+    }
+
+    public static function SubYears($timestamp, $howmany) {
+        $d = new DateTime($timestamp);
+        $d->modify("-$howmany years");
         return $d->format("Y-m-d H:i:s");
     }
 
