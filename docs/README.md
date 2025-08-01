@@ -464,11 +464,14 @@ Download a file to the browser.
 
 ### Start
 
-Start the download:
+Sends a file to the browser for download. As inline or as an attachment (separate file download).
 
 ```php
-$binaryContent = [binarydata];
-Download::Start("myfile.pdf", "application/pdf", $binaryContent);
+$filename = "myfile.pdf";
+$mimeType = "application/pdf";
+$contentBinary = [binarydata];
+$inline = true;
+Download::Start($filename, $mimeType, $contentBinary, $inline);
 ```
 
 ## Input
