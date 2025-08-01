@@ -48,19 +48,19 @@ TinyPHP::Register404($notFoundController);
 
 ### Register500
 
-Register the special 500 internal error page.
+Register the special 500 internal error controller.
 
 ```php
-$internalErrorController = "/html/500.php";
-TinyPHP::Register500($internalErrorController);
+$errorController = "/html/500.php";
+TinyPHP::Register500($errorController);
 ```
 
 ### ThrowError500
 
-Display the pre-registered 500 internal error page.
+Show the 500 page
 
 ```php
-$msg = "My error message";
+$msg = "My custom message about the error";
 TinyPHP::ThrowError500($msg);
 ```
 
