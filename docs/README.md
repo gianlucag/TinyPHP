@@ -941,30 +941,32 @@ Authentication. This module provides a simple authentication system using cookie
 
 This module utilizes plugins to handle user and session management. These plugins implement specific interfaces that define the required methods for interacting with user data and sessions. Here are the details of each plugin.
 
-The database implementation for the plugins are already provided buy the module (`AuthPluginDbUser` and `AuthPluginDbSession`).
+The database implementation for the plugins are already provided by the module (`AuthPluginDbUser` and `AuthPluginDbSession`).
 
 ### Default user plugin
 
 ```php
 $options = (object)[
-    "tableName" => "customers",
-    "userIdFieldName" => "email",
+    "tableName" => "users",
+    "userIdFieldName" => "id",
     "usernameFieldName" => "email",
-    "passwordFieldName" => "password"
+    "passwordFieldName" => "password",
+    "token2faFieldName": "token2fa"
 ];
 
 $userPlugin = new AuthPluginDbUser();
-$userPlugin->Init($options);
+$userPlugin->Init($options, $passwordCheckFunction = null, $passwordSetFunction = null)
 ```
 
 If needed, it's also possible to redefine the password check algorithm:
 
 ```php
 $options = (object)[
-    "tableName" => "customers",
-    "userIdFieldName" => "email",
+    "tableName" => "users",
+    "userIdFieldName" => "id",
     "usernameFieldName" => "email",
-    "passwordFieldName" => "password"
+    "passwordFieldName" => "password",
+    "token2faFieldName": "token2fa"
 ];
 
 function CustomPasswordCheckFunction($password, $storedPassword)
@@ -972,9 +974,33 @@ function CustomPasswordCheckFunction($password, $storedPassword)
     return sha1($password) == $storedPassword;
 }
 
-
 $userPlugin = new AuthPluginDbUser();
 $userPlugin->Init($options, "CustomPasswordCheckFunction");
+```
+
+Also, a custom password set function:
+
+```php
+$options = (object)[
+    "tableName" => "users",
+    "userIdFieldName" => "id",
+    "usernameFieldName" => "email",
+    "passwordFieldName" => "password",
+    "token2faFieldName": "token2fa"
+];
+
+function CustomPasswordCheckFunction($password, $storedPassword)
+{
+    return sha1($password) == $storedPassword;
+}
+
+function CustomPasswordSetFunction($password)
+{
+    return sha1($password);
+}
+
+$userPlugin = new AuthPluginDbUser();
+$userPlugin->Init($options, "CustomPasswordCheckFunction", "CustomPasswordSetFunction")
 ```
 
 ### Default session plugin
@@ -983,7 +1009,8 @@ $userPlugin->Init($options, "CustomPasswordCheckFunction");
 $options = (object)[
     "tableName" => "sessions",
     "sessionIdFieldName" => "sessionid",
-    "tokenFieldName" => "token"
+    "tokenFieldName" => "token",
+    "createdFieldName": "created"
 ];
 
 $sessionPlugin = new AuthPluginDbSession();
@@ -996,17 +1023,22 @@ Here's the interface for the two plugins:
 
 ```php
 interface AuthUserInterface {
-    public function Login($username, $password); // returns token on success, false on failure/denied
+    public function Verify($username, $password); // returns token on success, false on failure/denied
     public function GetUserId($username); // returns the user id
     public function GetUserInfo($id); // returns the user object
+    public function SetNewPassword($id, $password); // set a new password
+    public function GetToken2fa($username); // get the 2FA token
+    public function SetToken2fa($id, $token); // set the 2FA token
+    public function SetAccountId($id, $accountid); // set the account id
 }
 
 interface AuthSessionInterface {
-    public function AddSession($id, $token);
-    public function DeleteSessions($id);  // if id is not specified, delete all session of current user
+    public function AddSession($id, $token, $created);
+    public function DeleteSessions($id); // if id is not specified, delete all sessions of current user
     public function DeleteSession($token);
     public function GetSessionId($token); // returns the session id
-    public function TruncateSessions();  // delete all sessions of all users
+    public function TruncateSessions(); // delete all sessions of all users
+    public function DeleteExpiredSessions($createdBefore); // delete sessions created before the given timestamp
 }
 ```
 
@@ -1014,22 +1046,24 @@ interface AuthSessionInterface {
 
 Initialize the authentication module.
 
-Using cookie:
+Using cookie and 12 hours session expiration timeout:
 
 ```php
 $options = (object)[
     "method" => "cookie",
-    "cookieName" => "my-cookie-name"
+    "cookieName" => "my-cookie-name",
+    "expirationHours": 12
 ];
 
 Auth::Init($options, $userPlugin);
 ```
 
-Using x-auth token:
+Using x-auth token and no expiration timeout:
 
 ```php
 $options = (object)[
-    "method": "xauth"
+    "method": "xauth",
+    "expirationHours": null
 ];
 
 Auth::Init($options, $userPlugin);
@@ -1054,15 +1088,23 @@ Use a specific session plugin.
 Auth::SetSessionPlugin("customers");
 ```
 
-### Login
+### Verify
 
-Authenticate the user. Returns `false` if unsuccessful, returns a sessionToken if successful (and set the cookie, if method is `cookie`)
+Authenticate the user. Returns `false` if unsuccessful, returns `true ` if successful. Does not set any session or cookie.
 
 ```php
 $username = "username";
 $password = "password";
+$res = Auth::Verify($username, $password);
+```
 
-$sessionToken = Auth::Login($username, $password);
+### Login
+
+Logs in the user. Returns a sessionToken and set the cookie on the client (if auth method is `cookie`)
+
+```php
+$username = "username";
+$sessionToken = Auth::Login($username);
 ```
 
 ### LogoutAllSessions
@@ -1086,7 +1128,7 @@ Auth::LogoutThisSession();
 Is the user logged ?
 
 ```php
-$isLogged = Auth::IsLogged($config);
+$isLogged = Auth::IsLogged();
 ```
 
 ### GetLoggedUserInfo
@@ -1097,13 +1139,52 @@ Get the current logged in user data.
 $user = Auth::GetLoggedUserInfo();
 ```
 
+### GetUserInfo
+
+Get user info given its username
+
+```php
+$username = "myuser@user.com";
+$user = Auth::GetUserInfo($username);
+```
+
 ### SetNewPassword
 
 Set a new password for the current user
 
 ```php
+$userid = "1234";
 $newPassword = "myNewPassword";
-Auth::SetNewPassword($newPassword);
+Auth::SetNewPassword($userid, $newPassword);
+```
+
+### SetUserAccountId
+
+Set the account id for a given user
+
+```php
+$userid = "1234";
+$accountid = "5678";
+Auth::SetNewPassword($userid, $accountid);
+```
+
+### SetToken2fa
+
+Set the 2FA token (e.g. a TOTP secret) to the current logged user
+
+```php
+$token = "ABCD1234";
+Auth::SetToken2fa($token);
+```
+
+### GetToken2fa
+
+Get the user 2FA token (e.g. a TOTP secret)
+
+```php
+$username = "myuser@user.com";
+$token = Auth::GetToken2fa($username);
+echo $token; // "ABCD1234"
 ```
 
 ### TruncateSessions

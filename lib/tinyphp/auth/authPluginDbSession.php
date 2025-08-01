@@ -9,10 +9,10 @@ class AuthPluginDbSession implements AuthSessionInterface
         $this->config = $config;
     }
 
-    public function AddSession($id, $token)
+    public function AddSession($id, $token, $created)
     {
-        $query = "INSERT INTO ".$this->config->tableName." (".$this->config->sessionIdFieldName.", ".$this->config->tokenFieldName.") VALUES (?, ?);";
-        Db::Query($query, [$id, $token]);
+        $query = "INSERT INTO ".$this->config->tableName." (".$this->config->sessionIdFieldName.", ".$this->config->tokenFieldName.", ".$this->config->createdFieldName.") VALUES (?, ?, ?);";
+        Db::Query($query, [$id, $token, $created]);
     }
 
     public function DeleteSessions($id)
@@ -39,6 +39,12 @@ class AuthPluginDbSession implements AuthSessionInterface
     {
         $query = "TRUNCATE TABLE ".$this->config->tableName;
         Db::Query($query, []);
+    }
+
+    public function DeleteExpiredSessions($createdBefore)
+    {
+        $query = "DELETE FROM ".$this->config->tableName." WHERE ".$this->config->createdFieldName." < ?";
+        Db::Query($query, array($createdBefore));
     }
 }
 

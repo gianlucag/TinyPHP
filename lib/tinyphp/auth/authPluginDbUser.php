@@ -13,7 +13,7 @@ class AuthPluginDbUser implements AuthUserInterface
         $this->passwordSetFunction = $passwordSetFunction;
     }
 
-    public function Login($username, $password)
+    public function Verify($username, $password)
     {
         $query = "SELECT * FROM ".$this->config->tableName." WHERE ".$this->config->usernameFieldName." = ?";
         $res = Db::Query($query, [$username]);
@@ -59,8 +59,30 @@ class AuthPluginDbUser implements AuthUserInterface
             $storedPassword = password_hash($password, PASSWORD_BCRYPT);
         }
 
-        $query = "UPDATE ".$this->config->tableName." SET ".$this->config->asswordFieldName." = ? WHERE ".$this->config->userIdFieldName." = ?";
+        $query = "UPDATE ".$this->config->tableName." SET ".$this->config->passwordFieldName." = ? WHERE ".$this->config->userIdFieldName." = ?";
         Db::Query($query, [$storedPassword, $id]);
+        return true;
+    }
+
+    public function SetAccountId($id, $accountid)
+    {
+        $query = "UPDATE ".$this->config->tableName." SET ".$this->config->accountFieldName." = ? WHERE ".$this->config->userIdFieldName." = ?";
+        Db::Query($query, [$accountid, $id]);
+        return true;
+    }
+
+    public function GetToken2fa($username)
+    {
+        $query = "SELECT * FROM ".$this->config->tableName." WHERE ".$this->config->usernameFieldName." = ?";
+        $res = Db::Query($query, [$username]);
+        if(count($res) != 1) return false;
+        return $res[0][$this->config->token2faFieldName];
+    }
+
+    public function SetToken2fa($id, $token)
+    {
+        $query = "UPDATE ".$this->config->tableName." SET ".$this->config->token2faFieldName." = ? WHERE ".$this->config->userIdFieldName." = ?";
+        Db::Query($query, [$token, $id]);
         return true;
     }
 }
