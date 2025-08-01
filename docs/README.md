@@ -198,7 +198,7 @@ Manages currency values.
 Initialization:
 
 ```php
-$format = "€ #,#";
+$format = "€ #i#,#f#";
 $decimalDigits = 2;
 Currency::Init($format, $decimalDigits);
 ```
