@@ -1055,3 +1055,48 @@ Delete all sessions of all users
 ```php
 Auth::TruncateSessions();
 ```
+
+## TOTP
+
+Time-based on time password generator.
+
+### GenerateSecret
+
+Generates the secret for the time based code sequence.
+
+```php
+$secret = TOTP::GenerateSecret();
+echo $secret; // "EF415C..."
+```
+
+### Generate
+
+Generates the current expected code.
+
+```php
+$secret = "EF415C...";
+$code = TOTP::Generate($secret);
+echo $code; // "614524"
+```
+
+### Verify
+
+Verifies the user provided code.
+
+```php
+$secret = "EF415C...";
+$code = "614524";
+$code = TOTP::Verify($secret, $code);
+```
+
+### GetProvisioningUri
+
+Returns the url to setup an external code generator (app or desktop program). Possibly via qrcode.
+
+```php
+$accountName = "ACME inc.";
+$secret = "EF415C...";
+$issuer = "My app";
+$code = TOTP::GetProvisioningUri($accountName, $secret, $issuer);
+echo $url; // "otpauth://totp/..."
+```

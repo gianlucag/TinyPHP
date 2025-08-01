@@ -26,6 +26,7 @@ It provides the following functionalities:
 - Stripe (payments)
 - QRCodes
 - Currency (format currency amounts)
+- TOTP (Time Based One Time Password generator). Compatible with all the major TOTP apps like Google Authenticator.
 
 Basic example
 

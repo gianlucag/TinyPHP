@@ -31,6 +31,7 @@ class TinyPHPmodule
     const CAPTCHA = 'CAPTCHA';
     const PAYMENT = 'PAYMENT';
     const QRCODE = 'QRCODE';
+    const TOTP = 'TOTP';
 }
 
 class TinyPHP
@@ -108,6 +109,9 @@ class TinyPHP
             case TinyPHPmodule::QRCODE:
                 require_once($libraryFolderPath."/phpqrcode.php");
                 require_once("tinyphp/qrcodegenerator.php");
+                break;
+            case TinyPHPmodule::TOTP:
+                require_once("tinyphp/totp.php");
                 break;
             default:
                 break;
