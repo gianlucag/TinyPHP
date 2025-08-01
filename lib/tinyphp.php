@@ -275,6 +275,15 @@ class TinyPHP
             die();
         }
     }
+
+    public static function RenderJS()
+    {
+        $jsPath = __DIR__ . '/tinyphp.js';
+
+        echo "<script>";
+        echo file_get_contents($jsPath);
+        echo "</script>";
+    }
 }
 
 ?>

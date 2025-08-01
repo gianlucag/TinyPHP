@@ -90,6 +90,14 @@ Serves the incoming client request. This method should be called last, after all
 TinyPHP::Run();
 ```
 
+### RenderJS
+
+Injects the framework Javascript code. Usually called inside the head section of the html page. To be called only if some TinyPHP javascript function are required.
+
+```php
+TinyPHP::RenderJS();
+```
+
 ## API
 
 ### Ok
@@ -1149,4 +1157,18 @@ $secret = "EF415C...";
 $issuer = "My app";
 $code = TOTP::GetProvisioningUri($accountName, $secret, $issuer);
 echo $url; // "otpauth://totp/..."
+```
+
+## Javascript functions
+
+All the Javascript functions available by invoking `TinyPHP::RenderJS();`
+
+### TinyPHP.e()
+
+Dta sanification suitable for html output
+
+```javascript
+const rawMsg = "Hello <script>alert('world');</script>";
+const msg = TinyPHP.e(rawMsg);
+console.log(msg); // "Hello &lt;script&gt;alert(&#039;world&#039;);&lt;/script&gt;"
 ```
