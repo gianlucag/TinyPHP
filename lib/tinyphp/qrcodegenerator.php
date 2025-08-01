@@ -9,7 +9,10 @@ class QRCodeGenerator
 
     public static function GetImage($data)
     {
-        return QRcode::image($data, false, QR_ECLEVEL_L, 10);
+        ob_start();
+        QRcode::png($data, null, QR_ECLEVEL_L, 10);
+        $imageData = ob_get_clean();
+        return 'data:image/png;base64,' . base64_encode($imageData);
     }
 }
 

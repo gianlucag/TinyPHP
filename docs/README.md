@@ -514,7 +514,7 @@ QRCodeGenerator::GetPng($qrcodedata);
 
 ### GetImage
 
-Get the QR-Code as a GdImage object:
+Get the QR-Code image as Data URI Scheme (i.e. "data:image/png;base64,...")
 
 ```php
 $qrcodedata = "test";
