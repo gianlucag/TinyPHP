@@ -22,6 +22,7 @@ class TinyPHPmodule
     const UPLOAD = 'UPLOAD';
     const DATE = 'DATE';
     const INPUT = 'INPUT';
+    const OUTPUT = 'OUTPUT';
     const CURRENCY = 'CURRENCY';
     const MAIL = 'MAIL';
     const SPREADSHEET = 'SPREADSHEET';
@@ -78,6 +79,9 @@ class TinyPHP
                 break;
             case TinyPHPmodule::INPUT:
                 require_once("tinyphp/input.php");
+                break;
+            case TinyPHPmodule::OUTPUT:
+                require_once("tinyphp/output.php");
                 break;
             case TinyPHPmodule::CURRENCY:
                 require_once("tinyphp/currency.php");
