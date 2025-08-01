@@ -470,7 +470,7 @@ Download::Start("myfile.pdf", "application/pdf", $binaryContent);
 
 ### Clean
 
-Sanitize user input, remove html tags:
+Generic sanitization of the user input:
 
 ```php
 $cleanMessage = Input::Clean($userMessage);
