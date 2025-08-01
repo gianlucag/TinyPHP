@@ -483,20 +483,32 @@ $cleanMessage = Input::Clean($userMessage);
 
 ## Logger
 
-Log messages to file.
+Multi sink logger. Log messages to files.
 
 ### Init
 
-Initialization:
+Initialization. Specifies the log sinks. Each sink specifies the sink tag (e.g. "DB"), the file path, and whether the file should be rotated daily or not.
 
 ```php
-$logFolder = "/logs";
-Logger::Init($logFolder);
+$config = (object)[
+    [
+        "sink": "DB",
+        "path": "logs/db",
+        "rotateDaily": true
+    ],
+    [
+        "sink": "LOGIN",
+        "path": "logs/login",
+        "rotateDaily": false
+    ]
+];
+
+Logger::Init($config);
 ```
 
 ### Write
 
-Write a log line:
+Write a log line. Timestamp, IP address and sink name are automatically added.
 
 ```php
 $sink = "LOGIN";
