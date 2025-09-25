@@ -37,7 +37,6 @@ class TinyPHPmodule
 class TinyPHP
 {
     private static $routes = null;
-    private static $root = null;
     private static $page404 = null;
     private static $page500 = null;
     private static $pageMaintenance = null;
@@ -116,6 +115,18 @@ class TinyPHP
             default:
                 break;
         }
+    }
+
+    private static function GetRoot()
+    {
+        $scriptName = $_SERVER['SCRIPT_NAME'];
+        $parts = explode('/', trim($scriptName, '/'));
+        if (count($parts) > 1) {
+            $root = '/' . $parts[0];
+        } else {
+            $root = '';
+        }
+        return $root;
     }
 
     private static function GetClientIPAddress()
@@ -237,12 +248,8 @@ class TinyPHP
 
     public static function RegisterRoute($path, $controller)
     {
-        self::$routes[self::$root.$path] = $controller;
-    }
-
-    public static function RegisterRoot($rootPath)
-    {
-        self::$root = $rootPath;
+        $root = self::GetRoot();
+        self::$routes[$root.$path] = $controller;
     }
 
     public static function Register404($controller)
