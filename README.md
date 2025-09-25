@@ -144,14 +144,6 @@ Gets the route param "groupid" from the URL.
 TinyPHP::GetRouteParam("groupid");
 ```
 
-## Root path
-
-If you have a common root path for all your endpoint, you can use the `RegisterRoot` function.
-
-```php
-TinyPHP::RegisterRoot("/my/common/path");
-```
-
 # Examples
 
 Some examples.
@@ -185,7 +177,6 @@ File `main.php`
 ```php
 require 'tinyphp/tinyphp.php';
 
-TinyPHP::RegisterRoot("/demo");
 TinyPHP::RegisterRoute("/", "html/dashboard.php");
 TinyPHP::RegisterRoute("/login", "html/login.php");
 TinyPHP::Register404("html/404.php");
@@ -235,8 +226,7 @@ File `api.php`
 ```php
 require '../tinyphp/tinyphp.php';
 
-TinyPHP::RegisterRoot("/api/1.0.0");
-TinyPHP::RegisterRoute("/getuser", "endpoints/getuser.php");
+TinyPHP::RegisterRoute("/api/1.0.0/getuser", "endpoints/getuser.php");
 
 TinyPHP::Run();
 ```
