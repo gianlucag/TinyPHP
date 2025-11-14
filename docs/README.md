@@ -1246,7 +1246,7 @@ All the Javascript functions available by invoking `TinyPHP::RenderJS();`
 
 ### TinyPHP.e()
 
-Dta sanification suitable for html output
+Data sanification suitable for html output
 
 ```javascript
 const rawMsg = "Hello <script>alert('world');</script>";

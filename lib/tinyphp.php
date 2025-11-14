@@ -36,6 +36,7 @@ class TinyPHPmodule
 
 class TinyPHP
 {
+    private static $root = null;
     private static $routes = null;
     private static $page404 = null;
     private static $page500 = null;
@@ -246,10 +247,14 @@ class TinyPHP
         return isset(self::$routeParams[$paramName]) ? self::$routeParams[$paramName] : null;
     }
 
+    public static function RegisterRoot($root)
+    {
+        self::$root = $root;
+    }
+
     public static function RegisterRoute($path, $controller)
     {
-        $root = self::GetRoot();
-        self::$routes[$root.$path] = $controller;
+        self::$routes[self:$root.$path] = $controller;
     }
 
     public static function Register404($controller)

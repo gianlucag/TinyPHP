@@ -126,6 +126,10 @@ TinyPHP::Run();
 
 Routing in TinyPHP is done by matching a URL pattern with a php script (the controller).
 
+## RegisterRoute
+
+Match a URL pattern with a php controller.
+
 ```php
 TinyPHP::RegisterRoute("/login", "html/login.php");
 ```
@@ -134,6 +138,14 @@ You can specify dynamic route params in the URL (e.g. :groupid).
 
 ```php
 TinyPHP::RegisterRoute("/groups/:groupid/categories", "html/categories.php");
+```
+
+## RegisterRoot
+
+Set the root of the web application or project. Defaults to `'/'` if the function is not called. It's a convenient way of specifying a common prefix for all the paths declared using `RegisterRoute()`
+
+```php
+TinyPHP::RegisterRoot("/my/deep/url");
 ```
 
 ## GetRouteParam
