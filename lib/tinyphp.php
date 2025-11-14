@@ -118,18 +118,6 @@ class TinyPHP
         }
     }
 
-    private static function GetRoot()
-    {
-        $scriptName = $_SERVER['SCRIPT_NAME'];
-        $parts = explode('/', trim($scriptName, '/'));
-        if (count($parts) > 1) {
-            $root = '/' . $parts[0];
-        } else {
-            $root = '';
-        }
-        return $root;
-    }
-
     private static function GetClientIPAddress()
     {
         if (!empty($_SERVER['HTTP_CLIENT_IP']))
@@ -254,7 +242,7 @@ class TinyPHP
 
     public static function RegisterRoute($path, $controller)
     {
-        self::$routes[self:$root.$path] = $controller;
+        self::$routes[self::$root.$path] = $controller;
     }
 
     public static function Register404($controller)
