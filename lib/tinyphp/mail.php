@@ -43,7 +43,7 @@ class Mail
         if(self::$signature)
         {
             $body .= nl2br("\n\n--\n");
-            $body .= nl2br(self::$signature);
+            $body .= self::$signature;
         }
 
         $body .= '
