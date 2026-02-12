@@ -32,9 +32,6 @@ class Mail
         $body = '
         <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
         <html>
-        <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-        </head>
         <body bgcolor="#ffffff" text="#000000">
         ';
 
@@ -52,6 +49,9 @@ class Mail
         ';
 
         $mail = new PHPMailer(true);
+        $mail->CharSet  = 'UTF-8';
+        $mail->Encoding = 'base64';
+
         try
         {
             $mail->setFrom($from, $fromname);
