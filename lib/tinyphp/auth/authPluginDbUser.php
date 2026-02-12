@@ -64,13 +64,6 @@ class AuthPluginDbUser implements AuthUserInterface
         return true;
     }
 
-    public function SetAccountId($id, $accountid)
-    {
-        $query = "UPDATE ".$this->config->tableName." SET ".$this->config->accountFieldName." = ? WHERE ".$this->config->userIdFieldName." = ?";
-        Db::Query($query, [$accountid, $id]);
-        return true;
-    }
-
     public function GetToken2fa($username)
     {
         $query = "SELECT * FROM ".$this->config->tableName." WHERE ".$this->config->usernameFieldName." = ?";

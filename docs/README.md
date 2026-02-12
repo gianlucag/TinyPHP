@@ -1158,16 +1158,6 @@ $newPassword = "myNewPassword";
 Auth::SetNewPassword($userid, $newPassword);
 ```
 
-### SetUserAccountId
-
-Set the account id for a given user
-
-```php
-$userid = "1234";
-$accountid = "5678";
-Auth::SetNewPassword($userid, $accountid);
-```
-
 ### SetToken2fa
 
 Set the 2FA token (e.g. a TOTP secret) to the current logged user
