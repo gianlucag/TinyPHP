@@ -7,7 +7,6 @@ interface AuthUserInterface {
     public function SetNewPassword($id, $password); // set a new password
     public function GetToken2fa($username); // get the 2FA token
     public function SetToken2fa($id, $token); // set the 2FA token
-    public function SetAccountId($id, $accountid); // set the account id
 }
 
 interface AuthSessionInterface {
@@ -173,11 +172,6 @@ class Auth
     public static function SetNewPassword($userid, $password)
     {  
         return self::$authUserPlugin->SetNewPassword($userid, $password);
-    }
-
-    public static function SetUserAccountId($userid, $accountid)
-    {  
-        return self::$authUserPlugin->SetAccountId($userid, $accountid);
     }
 
     public static function SetToken2fa($token)
