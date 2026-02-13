@@ -43,6 +43,7 @@ class TinyPHP
     private static $pageMaintenance = null;
     private static $maintenanceAllowedIPAddress = null;
     private static $routeParams = null;
+    private static $currentRoute = null;
 
     public static function EnableModule($module, $libraryFolderPath = null)
     {
@@ -116,6 +117,22 @@ class TinyPHP
             default:
                 break;
         }
+    }
+
+    private static function StripRootFromPath($path)
+    {
+        if (!self::$root) {
+            return $path;
+        }
+
+        $root = '/' . trim(self::$root, '/');
+
+        if (strpos($path, $root) === 0) {
+            $path = substr($path, strlen($root));
+            return $path === '' ? '/' : $path;
+        }
+
+        return $path;
     }
 
     private static function GetClientIPAddress()
@@ -192,6 +209,8 @@ class TinyPHP
 
     public static function Run()
     {
+        self::$currentRoute = null;
+
         if($_SERVER['REQUEST_METHOD'] !== 'POST' && $_SERVER['REQUEST_METHOD'] !== 'GET')
         {
             http_response_code(200);
@@ -201,6 +220,8 @@ class TinyPHP
         $requestUri = $_SERVER['REQUEST_URI'];
         $path = self::GetPathFromRequestUri($requestUri);
 
+        self::$currentRoute = $path;
+        
         if(self::$maintenanceAllowedIPAddress && self::$maintenanceAllowedIPAddress != self::GetClientIPAddress())
         {
             self::RunMaintenance();
@@ -210,7 +231,7 @@ class TinyPHP
             $matchedRoute = self::Match(self::$routes, $path);
 
             if ($matchedRoute)
-            {
+            {                
                 self::$routeParams = $matchedRoute->params;
                 $page = $matchedRoute->destination;
     
@@ -228,6 +249,11 @@ class TinyPHP
                 self::Run404();
             }
         }
+    }
+
+    public static function GetCurrentRoute()
+    {
+        return self::StripRootFromPath(self::$currentRoute);
     }
 
     public static function GetRouteParam($paramName)
@@ -284,6 +310,21 @@ class TinyPHP
         echo file_get_contents($jsPath);
         echo "</script>";
     }
+
+    public static function Redirect($path)
+    {
+        $root = self::$root ?? '';
+    
+        if ($root !== '') {
+            $root = '/' . trim($root, '/');
+        }
+    
+        $path = '/' . ltrim($path, '/');
+    
+        header('Location: ' . $root . $path);
+        exit;
+    }
+    
 }
 
 ?>

@@ -64,6 +64,22 @@ $msg = "My custom message about the error";
 TinyPHP::ThrowError500($msg);
 ```
 
+### Redirect
+
+Redirect browser to a different url
+
+```php
+TinyPHP::Redirect("mynewroute");
+```
+
+### GetCurrentRoute
+
+Get the current route
+
+```php
+$route = TinyPHP::GetCurrentRoute();
+```
+
 ### RegisterMaintenance
 
 Register the special maintenance page (visible to any client trying to request any route).
