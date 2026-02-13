@@ -97,7 +97,12 @@ class Auth
 
         if($currentToken)
         {
-            self::$loggedUserId = self::$authSessionPlugins[self::$sessionPluginName]->GetSessionId($currentToken);
+            $userId = self::$authSessionPlugins[self::$sessionPluginName]->GetSessionId($currentToken);
+            
+            if(self::$authUserPlugin->GetUserInfo($userId)) // if user exists
+            {
+                self::$loggedUserId = $userId;
+            }
         }
     }
 
