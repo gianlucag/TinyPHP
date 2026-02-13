@@ -11,6 +11,11 @@ class Input
 
         return $input;
     }
+
+    public static function IsEmailValid($email)
+    {
+        return filter_var($email, FILTER_VALIDATE_EMAIL) !== false;
+    }
 }
 
 ?>

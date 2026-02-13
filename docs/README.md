@@ -542,6 +542,15 @@ Generic sanitization of the user input:
 $cleanMessage = Input::Clean($userMessage);
 ```
 
+### IsEmailValid
+
+Returns true if the email is valid, false otherwise:
+
+```php
+$email = "myemail@test.com";
+$res = Input::IsEmailValid($email);
+```
+
 ## Output
 
 ### e
