@@ -125,7 +125,7 @@ class Auth
                 'path' => '/',
                 'secure' => true,
                 'httponly' => true,
-                'samesite' => 'None'
+                'samesite' => 'Strict'
             ]);
         }
 
