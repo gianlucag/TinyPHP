@@ -60,11 +60,12 @@ class Db
 			$db = Db::GetInstance();
 			$stmt = $db->prepare($query);
 			$stmt->execute($data);
-			$res = $stmt->fetchAll(PDO::FETCH_ASSOC);
-			return $res;
+			return $stmt->fetchAll(PDO::FETCH_ASSOC);
 		}
-		catch (Exception $e)
+		catch (PDOException $e)
 		{
+			if ($e->getCode() === '23000' &&  stripos($query, "DELETE") === 0) return false;
+
 			$msg = [
 				"query" => $query,
 				"data" => $data,
