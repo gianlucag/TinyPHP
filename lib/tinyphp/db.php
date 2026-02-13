@@ -73,6 +73,38 @@ class Db
 			];
 
 			if(self::$error) call_user_func(self::$error, $msg);
+
+			if (self::GetInstance()->inTransaction())
+			{
+				throw $e;
+			}
+			
+			return false;
+		}
+	}
+
+	public static function Begin()
+	{
+		self::GetInstance()->beginTransaction();
+	}
+	
+	public static function Commit()
+	{
+		$pdo = self::GetInstance();
+		
+		if ($pdo->inTransaction())
+		{
+			$pdo->commit();
+		}
+	}
+	
+	public static function Rollback()
+	{
+		$pdo = self::GetInstance();
+
+		if ($pdo->inTransaction())
+		{
+			$pdo->rollBack();
 		}
 	}
 }

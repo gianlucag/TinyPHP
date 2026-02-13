@@ -441,6 +441,32 @@ Launch a query:
 $res = Db::Query("SELECT * FROM users WHERE id = ? AND username = ?;", [123, "gianluca"]);
 ```
 
+### Begin, Commit, Rollback
+
+Execute multiple queries as a single atomic transaction.
+
+- Begin(): Starts the transaction
+- Commit(): Saves all changes
+- Rollback(): Revers all changes if needed (e.g. code/db exception thrown)
+
+```php
+
+Db::Begin();
+
+try
+{
+    Db::Query("myquery1", $params1);
+    Db::Query("myquery2", $params2);
+    Db::Query("myquery3", $params3);
+    Db::Commit();
+}
+catch{}
+{
+    Db::Rollback();
+}
+
+```
+
 ## Dictionary
 
 ### Init
