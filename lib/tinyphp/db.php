@@ -44,7 +44,6 @@ class Db
 			self::$ctx = new PDO($connectionStr, self::$config->user, self::$config->pass);
 			self::$ctx->exec("SET CHARACTER SET utf8mb4");
     		self::$ctx->exec("SET NAMES utf8mb4");
-			self::$ctx->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
 			self::$ctx->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
 			self::$ctx->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		}
