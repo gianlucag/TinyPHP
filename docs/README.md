@@ -752,15 +752,17 @@ $fromname = "Gianluca";
 $to = "receiver@gmail.com";
 $subject = "Email subject";
 $content = "Hello world!\nBye bye!";
-$attachments = [
+$attachments = [  // optional
     "cid1", "email_attachments/logo.jpg",
     "cid2", "email_attachments/file.pdf",
 ];
-$ccs = [
+$ccs = [  // optional
     "receiver_ccs1@receiver.com",
     "receiver_ccs2@receiver.com",
     "receiver_ccs3@receiver.com",
 ];
+$replyTo = "replyhere@gmail.com"; // optional
+$replyToName = "Reply email name"; // optional
 
 $isSent = Mail::Send(
     $from,
@@ -769,7 +771,9 @@ $isSent = Mail::Send(
     $subject,
     $content,
     $attachments,
-    $ccs
+    $ccs,
+    $replyTo,
+    $replyToName
 );
 ```
 
@@ -780,6 +784,14 @@ For debugging purposes. All emails will be sent to the provided test email.
 ```php
 $testEmail = "test@email.com";
 Mail::SetDebug($testEmail);
+```
+
+### SetSMTPParams
+
+Use an external SMTP server and set the login parameters. Call this function before sending emails.
+
+```php
+Mail::SetSMTPParams("myhost", "username", "password", 587);
 ```
 
 ### SetEmailSignature

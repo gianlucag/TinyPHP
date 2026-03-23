@@ -8,6 +8,20 @@ class Mail
     private static $debugMode = false;
     private static $testEmail = null;
     private static $signature = null;
+    private static $isSmtpEnabled = false;
+    private static $smtpHost = null;
+    private static $smtpUsername = null;
+    private static $smtpPassword = null;
+    private static $smtpPort = null;
+
+    public static function SetSMTPParams($host, $username, $password, $port)
+    {
+        self::$isSmtpEnabled = true;
+        self::$smtpHost = $host;
+        self::$smtpUsername = $username;
+        self::$smtpPassword = $password;
+        self::$smtpPort = $port;
+    }
 
     public static function SetEmailSignature($signature)
     {
@@ -20,11 +34,10 @@ class Mail
         self::$testEmail = $testEmail;
     }
 
-    public static function Send($from, $fromname, $to, $subject, $content, $attachments = null, $ccs = null)
+    public static function Send($from, $fromname, $to, $subject, $content, $attachments = null, $ccs = null, $replyTo = null, $replyToName = null)
     {
-        if(self::$debugMode)
-        {
-            $subject = "[TEST TO ".$to."] ".$subject;
+        if (self::$debugMode) {
+            $subject = "[TEST TO " . $to . "] " . $subject;
             $to = self::$testEmail;
             $css = null;
         }
@@ -37,8 +50,7 @@ class Mail
 
         $body .= $content;
 
-        if(self::$signature)
-        {
+        if (self::$signature) {
             $body .= nl2br("\n\n--\n");
             $body .= self::$signature;
         }
@@ -49,46 +61,50 @@ class Mail
         ';
 
         $mail = new PHPMailer(true);
+
+        if (self::$isSmtpEnabled) {
+            $mail->isSMTP();
+            $mail->Host       = self::$smtpHost;
+            $mail->SMTPAuth   = true;
+            $mail->Username   = self::$smtpUsername;
+            $mail->Password   = self::$smtpPassword;
+            $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+            $mail->Port       = self::$smtpPort;
+        }
+
         $mail->CharSet  = 'UTF-8';
         $mail->Encoding = 'base64';
 
-        try
-        {
+        try {
             $mail->setFrom($from, $fromname);
-            if($to != null) $mail->addAddress($to);
-    
-            if($ccs)
-            {
-                for($c = 0; $c < count($ccs); $c++)
-                {
+            if ($to != null) $mail->addAddress($to);
+
+            if ($ccs) {
+                for ($c = 0; $c < count($ccs); $c++) {
                     $mail->addCC($ccs[$c]);
                 }
             }
-    
+
+            if ($replyTo && $replyToName) $mail->addReplyTo($replyTo, $replyToName);
+
             //if($bccs != null) $mail->addBCC($bccs);
-    
+
             $mail->isHTML(true);
             $mail->Subject = $subject;
             $mail->msgHTML($body);
 
-            if($attachments)
-            {
-                for($a = 0; $a < count($attachments); $a++)
-                {
+            if ($attachments) {
+                for ($a = 0; $a < count($attachments); $a++) {
                     $attachment = $attachments[$a];
                     $filepath = $attachment[0];
                     $cid = $attachment[1];
-                    $mail->AddAttachment($filepath, $cid); 
+                    $mail->AddAttachment($filepath, $cid);
                 }
             }
             $res = $mail->send();
             return $res;
-        }
-        catch(Exception $e)
-        {
+        } catch (Exception $e) {
             return false;
         }
     }
 }
-
-?>
