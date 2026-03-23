@@ -4,11 +4,13 @@ class Currency
 {
     private static $format = null;
     private static $decimalDigits = null;
+    private static $thousandsSep = null;
 
-    public static function Init($format, $decimalDigits)
+    public static function Init($format, $decimalDigits, $thousandsSep = null)
     {
         self::$format = $format;
         self::$decimalDigits = $decimalDigits;
+        self::$thousandsSep = $thousandsSep;
     }
 
     public static function Format($value, $options = null)
@@ -20,25 +22,37 @@ class Currency
         $out = isset($options["format"]) ? $options["format"] : self::$format;
         $fractDigits = isset($options["fractDigits"]) ? $options["fractDigits"] : self::$decimalDigits;
 
+        if (self::$thousandsSep !== null) {
+            $i = number_format($i, 0, '', self::$thousandsSep);
+        }
+
         $out = str_replace("#i#", $i, $out);
-        $out = str_replace("#f#", substr(sprintf("%0".self::$decimalDigits."d", $f), 0, $fractDigits), $out);
+        $out = str_replace(
+            "#f#",
+            substr(sprintf("%0" . self::$decimalDigits . "d", $f), 0, $fractDigits),
+            $out
+        );
+
         return $out;
     }
 
     public static function Parse($input)
     {
         $filtered = preg_replace('/[^\d,\.]/', '', $input);
+
         if (strpos($filtered, ',') !== false && strpos($filtered, '.') !== false) {
             return false;
         }
+
         $uniform = str_replace(',', '.', $filtered);
+
         if (!is_numeric($uniform)) {
             return false;
         }
+
         $numeric = (float)$uniform;
         $cents = round($numeric * (10 ** self::$decimalDigits));
+
         return (int)$cents;
     }
 }
-
-?>

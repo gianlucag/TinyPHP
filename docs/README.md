@@ -224,7 +224,8 @@ Initialization:
 ```php
 $format = "€ #i#,#f#";
 $decimalDigits = 2;
-Currency::Init($format, $decimalDigits);
+$thousandsSep = null; // thousands separator character or null (no separator)
+Currency::Init($format, $decimalDigits, $thousandsSep);
 ```
 
 ### Format
