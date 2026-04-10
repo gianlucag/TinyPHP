@@ -8,6 +8,7 @@ class Mail
     private static $debugMode = false;
     private static $testEmail = null;
     private static $signature = null;
+    private static $signatureLogoPath = null;
     private static $isSmtpEnabled = false;
     private static $smtpHost = null;
     private static $smtpUsername = null;
@@ -26,6 +27,11 @@ class Mail
     public static function SetEmailSignature($signature)
     {
         self::$signature = $signature;
+    }
+
+    public static function SetSignatureLogo($path)
+    {
+        self::$signatureLogoPath = $path;
     }
 
     public static function SetDebug($testEmail)
@@ -51,8 +57,12 @@ class Mail
         $body .= $content;
 
         if (self::$signature) {
-            $body .= nl2br("\n\n--\n");
+            $body .= "<br><br>--<br>";
             $body .= self::$signature;
+
+            if (self::$signatureLogoPath) {
+                $body .= '<br><br><img alt="logo" width="80" src="cid:logo">';
+            }
         }
 
         $body .= '
@@ -101,6 +111,11 @@ class Mail
                     $mail->AddAttachment($filepath, $cid);
                 }
             }
+
+            if (self::$signatureLogoPath) {
+                $mail->addEmbeddedImage(self::$signatureLogoPath, 'logo');
+            }
+
             $res = $mail->send();
             return $res;
         } catch (Exception $e) {
