@@ -755,67 +755,139 @@ $isHuman = Captcha::IsHuman($score = 0.5);
 
 ## Mail
 
-Send an email
+Utility class for sending HTML emails using PHPMailer.
 
 ### Send
 
-Send an email:
+Sends a single email.
+
+Returns `true` if the email was successfully sent, `false` otherwise.
 
 ```php
-$from = "senderi@gmail.com";
-$fromname = "Gianluca";
-$to = "receiver@gmail.com";
-$subject = "Email subject";
-$content = "Hello world!\nBye bye!";
-$attachments = [  // optional
-    "cid1", "email_attachments/logo.jpg",
-    "cid2", "email_attachments/file.pdf",
+$attachments = [
+    ["documents/manual.pdf", "manual.pdf"],
+    ["images/logo.png", "logo.png"]
 ];
-$ccs = [  // optional
-    "receiver_ccs1@receiver.com",
-    "receiver_ccs2@receiver.com",
-    "receiver_ccs3@receiver.com",
+
+$ccs = [
+    "admin@example.com",
+    "support@example.com"
 ];
-$replyTo = "replyhere@gmail.com"; // optional
-$replyToName = "Reply email name"; // optional
 
 $isSent = Mail::Send(
-    $from,
-    $fromname,
-    $to,
-    $subject,
-    $content,
-    $attachments,
-    $ccs,
-    $replyTo,
-    $replyToName
+    "noreply@example.com",      // sender email
+    "My Application",           // sender name
+    "user@example.com",         // recipient
+    "Welcome!",                 // subject
+    "<b>Hello!</b><br>Welcome.",// HTML body
+    $attachments,               // optional
+    $ccs,                       // optional
+    "support@example.com",      // optional reply-to
+    "Support Team"              // optional reply-to name
 );
 ```
 
-### SetDebug
+### SendBulk
 
-For debugging purposes. All emails will be sent to the provided test email.
+Sends multiple emails using a single SMTP connection for improved performance.
+
+Returns:
 
 ```php
-$testEmail = "test@email.com";
-Mail::SetDebug($testEmail);
+[
+    "success" => true,
+    "results" => [
+        [
+            "to" => "user1@example.com",
+            "success" => true
+        ],
+        [
+            "to" => "user2@example.com",
+            "success" => false,
+            "error" => "SMTP error..."
+        ]
+    ]
+]
 ```
+
+Example:
+
+```php
+$messages = [
+    [
+        "to" => "user1@example.com",
+        "subject" => "Welcome",
+        "content" => "<b>Hello user 1</b>"
+    ],
+    [
+        "to" => "user2@example.com",
+        "subject" => "Welcome",
+        "content" => "<b>Hello user 2</b>",
+        "ccs" => [
+            "admin@example.com"
+        ]
+    ]
+];
+
+$result = Mail::SendBulk(
+    "noreply@example.com",
+    "My Application",
+    $messages
+);
+```
+
+Each message may contain the following fields:
+
+| Field | Required | Description |
+|------|:--------:|-------------|
+| `to` | ✓ | Recipient email |
+| `subject` | ✓ | Email subject |
+| `content` | ✓ | HTML email body |
+| `attachments` | | Array of `["filepath", "filename"]` |
+| `ccs` | | Array of CC email addresses |
+| `replyTo` | | Reply-To email |
+| `replyToName` | | Reply-To display name |
 
 ### SetSMTPParams
 
-Use an external SMTP server and set the login parameters. Call this function before sending emails.
+Configures an external SMTP server. Call this once before sending emails.
 
 ```php
-Mail::SetSMTPParams("myhost", "username", "password", 587);
+Mail::SetSMTPParams(
+    "smtp.example.com",
+    "username",
+    "password",
+    587
+);
 ```
 
 ### SetEmailSignature
 
-Set the email signature. The signature is appended automatically to all emails.
+Sets a global HTML signature automatically appended to every email.
 
 ```php
-$signature = "My email signature";
-Mail::SetEmailSignature($signature);
+Mail::SetEmailSignature("
+Regards,<br>
+<b>My Company</b>
+");
+```
+
+### SetSignatureLogo
+
+Adds a logo below the email signature.
+
+```php
+Mail::SetSignatureLogo("images/logo.png");
+```
+
+### SetDebug
+
+Enables debug mode.
+
+Every email will be redirected to the specified test address instead of the original recipient. The original destination is prepended to the email subject.
+
+```php
+Mail::SetDebug("developer@example.com");
 ```
 
 ## SpreadSheet
