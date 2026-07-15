@@ -507,7 +507,7 @@ $config = (object)[
 Dictionary::Init($config);
 ```
 
-Dictionary example:
+Dictionary examples:
 
 ```json
 {
@@ -532,6 +532,21 @@ Translate and echo a dictionary key:
 ```php
 etxt("404_BODY"); // "Page not found"
 ```
+
+Translate a dictionary key with parameters:
+
+```json
+{
+	"TITLE": "The title is %"
+}
+```
+
+```php
+$res = txt("TITLE", ["My title"]);
+echo $res; // "The title is My title"
+```
+
+To print the actual character '%' use the escape string '%%'.
 
 ### SetLanguage
 
