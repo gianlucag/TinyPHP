@@ -27,6 +27,7 @@ class Auth
     private static $authSessionPlugins = [];
     private static $loggedUserId = null;
     private static $sessionPluginName = null;
+	private static $allowCookieOverHttp = false;
 
     private static function IsXAuthMode()
     {
@@ -82,6 +83,7 @@ class Auth
         self::$authMode = $config->method == "xauth" ? "xauth" : "cookie";
         self::$expirationHours = $config->expirationHours;
         self::$cookieName = isset($config->cookieName) ? $config->cookieName : null;
+		self::$allowCookieOverHttp = isset($config->allowCookieOverHttp) ? $config->allowCookieOverHttp : false;
 
         if(self::$expirationHours)
         {
@@ -127,7 +129,7 @@ class Auth
             setcookie(self::$cookieName, $token, [
                 'expires' => $expiry,
                 'path' => '/',
-                'secure' => true,
+                'secure' => !self::$allowCookieOverHttp,
                 'httponly' => true,
                 'samesite' => 'Strict'
             ]);

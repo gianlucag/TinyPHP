@@ -1197,13 +1197,14 @@ interface AuthSessionInterface {
 
 Initialize the authentication module.
 
-Using cookie and 12 hours session expiration timeout:
+Authenticate using cookie, 12 hours session expiration timeout, cookie name 'my-cookie-name', don't allow over HTTP:
 
 ```php
 $options = (object)[
     "method" => "cookie",
     "cookieName" => "my-cookie-name",
-    "expirationHours": 12
+    "expirationHours": 12,
+	"allowCookieOverHttp": false
 ];
 
 Auth::Init($options, $userPlugin);
