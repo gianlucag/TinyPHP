@@ -22,7 +22,8 @@ class Dictionary
         $dictionary = self::$dictionaries[self::$lang] ?? null;
         $txt = $dictionary->$tag ?? "{{{$tag}}}";
         $txt = preg_replace('/(?<!%)%(?!%)/', '%s', $txt);
-        return empty($values) ? str_replace('%%', '%', $txt) : vsprintf($txt, $values);
+        $txt = empty($values) ? str_replace('%%', '%', $txt) : vsprintf($txt, $values);
+		return htmlspecialchars((string)$txt, ENT_QUOTES | ENT_SUBSTITUTE, "UTF-8");
     }
 
     public static function GetLanguage()
