@@ -176,10 +176,25 @@ class Mail
 
                             $attachment = $attachments[$a];
 
-                            $filepath = $attachment[0];
-                            $cid      = $attachment[1];
+                            if (isset($attachment['content'])) {
 
-                            $mail->addAttachment($filepath, $cid);
+                                $content = $attachment['content'];
+                                $name    = $attachment['name'];
+                                $type    = $attachment['type'] ?? '';
+
+                                $mail->addStringAttachment(
+                                    $content,
+                                    $name,
+                                    PHPMailer::ENCODING_BASE64,
+                                    $type
+                                );
+                            } else {
+
+                                $filepath = $attachment[0];
+                                $cid      = $attachment[1];
+
+                                $mail->addAttachment($filepath, $cid);
+                            }
                         }
                     }
 

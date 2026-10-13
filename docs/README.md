@@ -766,7 +766,11 @@ Returns `true` if the email was successfully sent, `false` otherwise.
 ```php
 $attachments = [
     ["documents/manual.pdf", "manual.pdf"],
-    ["images/logo.png", "logo.png"]
+    [
+        "name" => "myfile.dat",
+        "content" => $myfile,
+        "type" => "application/octet-stream"
+    ]
 ];
 
 $ccs = [
@@ -775,16 +779,67 @@ $ccs = [
 ];
 
 $isSent = Mail::Send(
-    "noreply@example.com",      // sender email
-    "My Application",           // sender name
-    "user@example.com",         // recipient
-    "Welcome!",                 // subject
-    "<b>Hello!</b><br>Welcome.",// HTML body
-    $attachments,               // optional
-    $ccs,                       // optional
-    "support@example.com",      // optional reply-to
-    "Support Team"              // optional reply-to name
+    "noreply@example.com",       // sender email
+    "My Application",            // sender name
+    "user@example.com",          // recipient
+    "Welcome!",                  // subject
+    "<b>Hello!</b><br>Welcome.", // HTML body
+    $attachments,                // optional
+    $ccs,                        // optional
+    "support@example.com",       // optional reply-to
+    "Support Team"               // optional reply-to name
 );
+```
+
+### Attachments
+
+Attachments can be provided either as files from disk or directly from memory.
+
+File attachments use the existing `["filepath", "filename"]` format:
+
+```php
+$attachments = [
+    ["documents/manual.pdf", "manual.pdf"],
+    ["images/logo.png", "logo.png"]
+];
+```
+
+In-memory attachments use an associative array with `name`, `content`, and an optional `type`:
+
+```php
+$attachments = [
+    [
+        "name" => "myfile.dat",
+        "content" => $myfile,
+        "type" => "application/octet-stream"
+    ]
+];
+```
+
+In-memory attachments are sent using PHPMailer `addStringAttachment()` and do not require a temporary file on disk.
+
+The `type` field is optional:
+
+```php
+$attachments = [
+    [
+        "name" => "data.json",
+        "content" => $json
+    ]
+];
+```
+
+File attachments and in-memory attachments can be mixed in the same array:
+
+```php
+$attachments = [
+    ["documents/manual.pdf", "manual.pdf"],
+    [
+        "name" => "myfile.dat",
+        "content" => $myfile,
+        "type" => "application/octet-stream"
+    ]
+];
 ```
 
 ### SendBulk
@@ -825,6 +880,13 @@ $messages = [
         "content" => "<b>Hello user 2</b>",
         "ccs" => [
             "admin@example.com"
+        ],
+        "attachments" => [
+            [
+                "name" => "myfile.dat",
+                "content" => $myfile,
+                "type" => "application/octet-stream"
+            ]
         ]
     ]
 ];
@@ -843,7 +905,7 @@ Each message may contain the following fields:
 | `to` | ✓ | Recipient email |
 | `subject` | ✓ | Email subject |
 | `content` | ✓ | HTML email body |
-| `attachments` | | Array of `["filepath", "filename"]` |
+| `attachments` | | Array of file attachments `["filepath", "filename"]` and/or in-memory attachments using `name`, `content`, and optional `type` |
 | `ccs` | | Array of CC email addresses |
 | `replyTo` | | Reply-To email |
 | `replyToName` | | Reply-To display name |
