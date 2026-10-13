@@ -60,25 +60,41 @@ class Stripe
         ]);
 
         self::$sessionId = $res->id;
+		return self::$sessionId;
     }
 
-    public static function OutputJavaScript() // creates the 'launchStripePaymentProcess' JavaScript function
-    {
-        echo '
-        <script src="https://js.stripe.com/v3"></script>
-        <script>
-        function launchStripePaymentProcess(onError) {
-            var stripe = Stripe("'.self::$config->jsPublicKey.'");
-            stripe.redirectToCheckout({ sessionId: "'.self::$sessionId.'"})
-            .then(function(result){
-                if (result.error) {
-                    onError(result.error.message);
-                }
-            });
-        };
-        </script>
-        ';
-    }
+	public static function OutputJavaScript() // creates the 'launchStripePaymentProcess' JavaScript function
+	{
+		$sessionId = self::$sessionId == null ? "null" : '"'.self::$sessionId.'"';
+	
+		echo '
+		<script src="https://js.stripe.com/v3"></script>
+		<script>
+		function launchStripePaymentProcess(onError, sessionId = null)
+		{
+			var stripe = Stripe("'.self::$config->jsPublicKey.'");
+	
+			if(sessionId == null)
+				sessionId = '.$sessionId.';
+	
+			if(sessionId == null)
+			{
+				onError("Stripe session ID not available");
+				return;
+			}
+	
+			stripe.redirectToCheckout({
+				sessionId: sessionId
+			})
+			.then(function(result)
+			{
+				if(result.error)
+					onError(result.error.message);
+			});
+		};
+		</script>
+		';
+	}
 
     public static function ProcessWebHook($paymentSuccessCallback)
     {

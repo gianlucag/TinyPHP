@@ -1053,9 +1053,11 @@ Stripe::Start(
 );
 ```
 
+The function returns the Stripe session id.
+
 ### OutputJavaScript
 
-Call `OutputJavaScript()` to make available the `launchStripePaymentProcess` JavaScript function, used to open the Stripe payment page on the client browser.
+Call `OutputJavaScript()` to make available the `launchStripePaymentProcess()` JavaScript function, used to open the Stripe payment page on the client browser.
 
 PHP side:
 
@@ -1067,9 +1069,55 @@ Javascript side:
 
 ```javascript
 $("#buy_button").on("click", () => {
-	launchStripePaymentProcess();
+	launchStripePaymentProcess((error) => {
+		alert(error);
+	});
 });
 ```
+
+`launchStripePaymentProcess()` accepts two parameters:
+
+```javascript
+launchStripePaymentProcess(onError, sessionId);
+```
+
+- `onError`: callback function invoked if Stripe cannot start the checkout process.
+- `sessionId`: optional Stripe Checkout Session ID.
+
+If `sessionId` is omitted, the function uses the session previously created by `Stripe::Start()` during the same PHP request.
+
+For example:
+
+```php
+Stripe::Start(...);
+Stripe::OutputJavaScript();
+```
+
+```javascript
+launchStripePaymentProcess((error) => {
+	alert(error);
+});
+```
+
+The optional `sessionId` parameter is useful when the Stripe Checkout Session is created through a separate AJAX request.
+
+For example, the server can return the session ID:
+
+```json
+{
+	"sessionId": "cs_test_..."
+}
+```
+
+and the client can then start the checkout using:
+
+```javascript
+launchStripePaymentProcess((error) => {
+	alert(error);
+}, response.sessionId);
+```
+
+This allows `Stripe::OutputJavaScript()` to be called when the page is initially rendered, while the actual Stripe Checkout Session can be created later, for example after validating and saving customer data through an AJAX request.
 
 ### ProcessWebHook
 
