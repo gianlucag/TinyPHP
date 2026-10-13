@@ -23,7 +23,7 @@ class Dictionary
         $txt = $dictionary->$tag ?? "{{{$tag}}}";
         $txt = preg_replace('/(?<!%)%(?!%)/', '%s', $txt);
         $txt = empty($values) ? str_replace('%%', '%', $txt) : vsprintf($txt, $values);
-		return htmlspecialchars((string)$txt, ENT_QUOTES | ENT_SUBSTITUTE, "UTF-8");
+		return $txt;
     }
 
     public static function GetLanguage()
@@ -49,5 +49,5 @@ function txt($tag, $values = [])
 
 function etxt($tag, $values = [])
 {
-    echo Dictionary::Translate($tag, $values);
+	echo htmlspecialchars((string)Dictionary::Translate($tag, $values), ENT_QUOTES | ENT_SUBSTITUTE, "UTF-8");
 }
