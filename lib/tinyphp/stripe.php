@@ -55,7 +55,7 @@ class Stripe
                 ]
             ]
             ],
-            'success_url' => $successUrl.'?sid={CHECKOUT_SESSION_ID}',
+            'success_url' => $successUrl.(strpos($successUrl, "?") === false ? "?" : "&").'sid={CHECKOUT_SESSION_ID}',
             'cancel_url' => $cancelUrl,
         ]);
 
