@@ -98,6 +98,29 @@ $allowedIPAddress = "192.168.1.100";
 TinyPHP::EnableMaintenance($allowedIPAddress);
 ```
 
+An optional second argument, `$excludedRoutes`, lets other clients access one or more routes normally while maintenance mode is active. Pass a route string or an array of route strings, using the same paths as `RegisterRoute()`:
+
+```php
+TinyPHP::RegisterRoute("/health", "html/health.php");
+TinyPHP::RegisterRoute("/webhook", "html/webhook.php");
+TinyPHP::RegisterRoute("/status/:id", "html/status.php");
+TinyPHP::RegisterMaintenance("html/maintenance.php");
+
+TinyPHP::EnableMaintenance("192.168.1.100", [
+    "/health",
+    "/webhook",
+    "/status/:id"
+]);
+
+TinyPHP::Run();
+```
+
+The exclusion matches the request path (query strings are ignored). Dynamic placeholders such as `:id` match one path segment; other routes still display the maintenance page. Exclusions are automatically relative to the root specified via `RegisterRoot()`. An exact route does not exempt its subpaths. The default `[]` preserves the previous behavior, and a single exclusion can be passed as a string:
+
+```php
+TinyPHP::EnableMaintenance("192.168.1.100", "/health");
+```
+
 ### Run
 
 Serves the incoming client request. This method should be called last, after all the route registration and modules initialization has been done.

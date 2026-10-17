@@ -156,6 +156,20 @@ Gets the route param "groupid" from the URL.
 TinyPHP::GetRouteParam("groupid");
 ```
 
+# Maintenance mode
+
+Register a maintenance page and enable maintenance mode to show it to everyone except an allowed IP address. You can optionally exempt one or more routes (for example, a health check or webhook) by passing them as the second argument to `EnableMaintenance()`:
+
+```php
+TinyPHP::RegisterRoute("/health", "html/health.php");
+TinyPHP::RegisterRoute("/webhook", "html/webhook.php");
+TinyPHP::RegisterMaintenance("html/maintenance.php");
+TinyPHP::EnableMaintenance("192.168.1.100", ["/health", "/webhook"]);
+TinyPHP::Run();
+```
+
+Exemptions can also be a single string or use dynamic route parameters (such as `/status/:id`). They follow the same path patterns and `RegisterRoot()` prefix as `RegisterRoute()`. Without the optional argument, maintenance mode behaves as before. See [the documentation](docs/README.md#enablemaintenance) for details.
+
 # Examples
 
 Some examples.

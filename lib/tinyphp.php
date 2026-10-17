@@ -42,6 +42,7 @@ class TinyPHP
     private static $page500 = null;
     private static $pageMaintenance = null;
     private static $maintenanceAllowedIPAddress = null;
+    private static $maintenanceExcludedRoutes = [];
     private static $routeParams = null;
     private static $currentRoute = null;
 
@@ -207,6 +208,19 @@ class TinyPHP
         return $matches[1];
     }
 
+    private static function IsMaintenanceExcludedRoute($path)
+    {
+        foreach (self::$maintenanceExcludedRoutes as $route)
+        {
+            if (preg_match(self::ConvertDynamicParamsToRegex(self::$root.$route), $path))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     public static function Run()
     {
         self::$currentRoute = null;
@@ -222,7 +236,9 @@ class TinyPHP
 
         self::$currentRoute = $path;
         
-        if(self::$maintenanceAllowedIPAddress && self::$maintenanceAllowedIPAddress != self::GetClientIPAddress())
+        if(self::$maintenanceAllowedIPAddress &&
+           self::$maintenanceAllowedIPAddress != self::GetClientIPAddress() &&
+           !self::IsMaintenanceExcludedRoute($path))
         {
             self::RunMaintenance();
         }
@@ -286,9 +302,10 @@ class TinyPHP
         self::$pageMaintenance = $controller;
     }
 
-    public static function EnableMaintenance($allowedIPAddress)
+    public static function EnableMaintenance($allowedIPAddress, $excludedRoutes = [])
     {
         self::$maintenanceAllowedIPAddress = $allowedIPAddress;
+        self::$maintenanceExcludedRoutes = (array)$excludedRoutes;
     }
 
     public static function ThrowError500($msg = null)
